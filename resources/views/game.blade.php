@@ -4,8 +4,13 @@
 	<head>
 		<meta charset="utf-8">
 		<title>XHTML 1.0 Strict Template</title>
+									<!--URL::asset navigates to the /public folder -->
+		<link rel="stylesheet" type="text/css" href='{{URL::asset('css/game.css')}}'>
 	</head>
 	<body>
-		<h3>Game goes here</h3>
+		<div id="wrapper"></div>
+		
+
+		<script src='{{URL::asset('js/game.js')}}'></script>
 	<body>
 </html>
