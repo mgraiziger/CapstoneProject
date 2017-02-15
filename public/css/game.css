@@ -1,25 +1,14 @@
-div {
-	height: 50px;
-	width: 50px;
-	float: left;
-}
-
-div.red {
-	background-color: red;
-}
-
-div.blue {
-	background-color: blue;
-}
-
-div.green {
-	background-color: green;
-}
-
-#wrapper {
-    height: 500px;
-    width: 500px;
+/*The position of the #canvas and the #character must not change, or they will not work*/
+#canvas {
     position: absolute;
     top: 200px;
     left: 200px;
+}
+
+#character {
+	height: 50px;
+	width: 50px;
+	position: absolute;
+	top: 200px;
+	left: 200px;
 }
