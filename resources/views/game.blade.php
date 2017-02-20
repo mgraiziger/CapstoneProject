@@ -8,11 +8,25 @@
 		<link rel="stylesheet" type="text/css" href='{{URL::asset('css/game.css')}}'>
 	</head>
 	<body>
-		<div>
-			<p> Arrow Keys to move </p>
-		</div>
+		
+		<header>
+			<img src="{{URL::asset('images/nHeader.jpg')}}" height="180" width="100%">
+		</header>
+		
+		<div id="body">
+		<img src="{{URL::asset('images/bg.png')}}" height="100%" width="100%">
+
+		<!--<div id="side">
+			<ul>
+			<a href="index.php?page=home_page" class="text">Home Page</a>
+			<a href="index.php?page=home_page" class="text">Heroes</a>
+			<a href="index.php?page=home_page" class="text">Enemies</a>
+			<a href="index.php?page=home_page" class="text">Maps</a>
+			</ul>
+		</div>-->
+			
 		<canvas id="canvas" height="500" width="500"></canvas>
-		<div id="character">Char Here</div>
+		<div id="character"><img src="{{URL::asset('images/player.jpg')}}" height="50" width="50"></div>
 		
 		<script type="text/javascript">
 			var canvas = document.querySelector('#canvas');
@@ -31,16 +45,16 @@
 			var yPos = 0;
 
 			var map = [
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,1,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0],
-			[0,0,0,1,2,0,0,0,0,0]
+			[0,0,0,1,1,0,0,0,0,0],
+			[0,0,1,1,0,0,2,2,0,0],
+			[0,0,0,1,0,0,0,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0],
+			[0,0,0,0,0,1,0,0,0,0],
+			[0,2,0,0,0,1,1,0,0,0],
+			[0,2,0,0,0,0,0,0,0,0],
+			[0,0,1,1,0,0,0,0,0,0],
+			[0,0,1,1,0,0,0,2,2,0],
+			[0,0,0,0,0,0,0,0,0,0]
 
 			];
 
@@ -111,8 +125,14 @@
 			}, false);
 
 			document.addEventListener('keydown', move)
+	
 		</script>
 
 		<!--<script src='{{URL::asset('js/game.js')}}'></script>-->
+		<footer id="foot">
+		<strong id="strong"> &#169; Copyright 2017</strong>
+			<p id="enjoy">ENJOY THE GAME!!!</p>
+		</footer>
+		</div>
 	<body>
 </html>
