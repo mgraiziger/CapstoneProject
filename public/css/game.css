@@ -34,4 +34,26 @@ strong{
 	color:green;
 	text-align: center;
 	font-size: 24px;
-}
+	   animation:3s blinker linear infinite;
+    -webkit-animation:3s blinker linear infinite;
+    -moz-animation:3s blinker linear infinite;
+
+    }
+
+    @-moz-keyframes blinker {  
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @-webkit-keyframes blinker {  
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @keyframes blinker {  
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
