@@ -134,5 +134,6 @@
 			<p id="enjoy">ENJOY THE GAME!!!</p>
 		</footer>
 		</div>
+		</script>
 	<body>
 </html>
