@@ -58,6 +58,19 @@
 
 			];
 
+			var enemyMap = [
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[2,0,2,0,2,0,2,0,2,0],
+			[0,1,0,1,0,1,0,1,0,1],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0]
+			];
+
 			dirt.onload = function() {
 				for(var i=0; i<map.length; i++)
 				{
@@ -95,6 +108,48 @@
 						//UP
 						if (key == 38 && y >200) {
 							y-= 50;
+
+							//creates random number for up arrow
+							var ran = Math.floor((Math.random() * 10) + 1);
+							switch(ran){
+								case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
+								break;
+								case 8: case 9: case 10:
+								context.clearRect(0,0,canvas.width, canvas.height);
+								
+								var tmpcanvas = document.querySelector('#canvas');
+								var tmpcontext = tmpcanvas.getContext('2d');
+								
+						//not drawing new images 
+						dirt.onload = function() {
+							for(var l=0; l<enemyMap.length; l++)
+							{
+								for(var k=0; k<enemyMap[l].length; k++){
+
+								if(enemyMap[l][k] == 0) {
+									context.drawImage(grass, xPos, yPos, 50, 50);
+									}
+					
+								if(enemyMap[l][k] == 1) {
+									context.drawImage(water, xPos, yPos, 50, 50);
+									}
+
+								if(enemyMap[l][k] == 2) {
+									context.drawImage(dirt, xPos, yPos, 50, 50);
+									}
+
+								xPos+=50;
+	
+								}
+								xPos =0;
+								yPos+=50;
+							}
+						}
+							break;
+							default:
+
+							}
+
 						//DOWN
 						} else if (key == 40 && y < 650) {
 							y += 50;
