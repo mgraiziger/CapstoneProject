@@ -170,6 +170,7 @@
 					//Next, make sure he isn't trying to leave the array (would cause an error), or trying to walk on water
 					//IMPORTANT: The if statement checks the map[] array for water, not the heroMap[] array
 					if (loc[0] > 0 && map[loc[0]-1][loc[1]] != 1) {
+						
 
 						//if loc = [1,1], the player is attempting to move to [0,1]
 
@@ -181,7 +182,18 @@
 
 						//Finally, we redraw the map
 						//TODO: Fix the player creating grass bug, modularize this function if possible
-						renderMap();
+						
+						var ran = Math.floor((Math.random() * 10) + 1);
+							switch(ran){
+								case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
+								break;
+								case 8: case 9: case 10:
+								map = enemyMap;
+								
+								break;
+								
+							}
+							renderMap();
 					}
 				}
 				//DOWN
