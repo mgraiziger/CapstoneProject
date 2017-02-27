@@ -47,9 +47,9 @@
 			//var xPos = 0;
 			//var yPos = 0;
 
-
+			//0 = grass; 1 = water; 2 = dirt;
 			var map = [
-			[3,0,0,1,1,0,0,0,0,0],
+			[0,0,0,1,1,0,0,0,0,0],
 			[0,0,0,1,0,0,2,2,0,0],
 			[0,0,0,1,0,0,0,0,0,0],
 			[0,0,0,1,1,1,0,0,0,0],
@@ -61,8 +61,21 @@
 			[0,0,0,0,0,0,0,0,0,0]
 			];
 
-			/*var heroMap = [
-				[0,0,0,0,0,0,0,0,0,0],
+			var secondMap = [
+			[2,1,1,1,1,0,0,0,0,0],
+			[2,1,1,1,0,0,2,2,0,0],
+			[2,2,2,1,0,0,0,0,0,0],
+			[0,0,2,1,1,1,0,0,0,0],
+			[0,2,2,0,0,1,0,0,0,0],
+			[0,2,0,0,0,1,1,0,0,0],
+			[0,2,0,0,0,0,0,0,0,0],
+			[0,2,1,1,0,0,2,2,2,2],
+			[0,2,1,1,0,0,2,2,2,2],
+			[0,2,2,2,2,2,2,0,0,0]
+			];
+
+			//1 = hero; 0 = nothing;
+			var heroMap = [
 				[1,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0],
@@ -71,13 +84,15 @@
 				[0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0]	
-			];*/
+			];
 
 			function renderMap() {
 				context.clearRect(0,0,500,500);
 				var xPos = 0;
 				var yPos = 0;
+				//These for loops render the map
 				for(let i=0; i<map.length; i++)
 				{
 					for(let j=0; j<map[i].length; j++){
@@ -92,27 +107,18 @@
 
 					if(map[i][j] == 2) {
 						context.drawImage(dirt, xPos, yPos, 50, 50);
-						}
-
-					if(map[i][j] == 3) {
-						context.drawImage(hero, xPos, yPos, 50, 50);
-						}
-
-					xPos+=50;
-	
 					}
-					xPos =0;
+					xPos+=50;
+					}
+					xPos=0;
 					yPos+=50;
 				}
-				//context.drawImage(hero, 100, 100, 50, 50);
+				renderHero();
 			}
 			
-			dirt.onload = function() {
-				renderMap();
-			}
-
+			
 			function renderHero() {
-				//This function is not currently in use
+				//This renders the hero. It is called in the renderMap() function
 				var xPos= 0;
 				var yPos= 0;
 				for(let i=0; i<heroMap.length; i++)
@@ -129,12 +135,12 @@
 			}
 
 			function findHero() {
-				//loops through each array within the map array and finds the 3 value representing the hero
+				//loops through each array within the heroMap array and finds the 1 value representing the hero
 				//Could be replaced with a 2 value array variable which is incremented appropriately during each movement
 				var i = -1;
 				do {
 					i++;
-					var charLocation = map[i].indexOf(3);
+					var charLocation = heroMap[i].indexOf(1);
 				} while(charLocation == -1);
 				return [i, charLocation];
 			}
@@ -148,16 +154,16 @@
 					var loc = findHero();
 
 					//Next, make sure he isn't trying to leave the array (would cause an error), or trying to walk on water
+					//IMPORTANT: The if statement checks the map[] array for water, not the heroMap[] array
 					if (loc[0] > 0 && map[loc[0]-1][loc[1]] != 1) {
 
 						//if loc = [1,1], the player is attempting to move to [0,1]
 
 						//This sets the value of the array index 'above' (in this case) the player's current position to be the player
-						map[loc[0]-1][loc[1]] = 3;
+						heroMap[loc[0]-1][loc[1]] = 1;
 
-						//This changes the space the player was on into grass
-						//For now, any space the player moves off of turns into grass
-						map[loc[0]][loc[1]] = 0;
+						//This changes the space the player was on into a 0
+						heroMap[loc[0]][loc[1]] = 0;
 
 						//Finally, we redraw the map
 						//TODO: Fix the player creating grass bug, modularize this function if possible
@@ -168,8 +174,8 @@
 				if (key == 40) {
 					var loc = findHero();
 					if (loc[0] < 9 && map[loc[0]+1][loc[1]] != 1) {
-						map[loc[0]+1][loc[1]] = 3;
-						map[loc[0]][loc[1]] = 0;
+						heroMap[loc[0]+1][loc[1]] = 1;
+						heroMap[loc[0]][loc[1]] = 0;
 						renderMap();
 					}
 				}
@@ -177,8 +183,8 @@
 				if (key == 37) {
 					var loc = findHero();
 					if (loc[1] > 0 && map[loc[0]][loc[1]-1] != 1) {
-						map[loc[0]][loc[1]-1] = 3;
-						map[loc[0]][loc[1]] = 0;
+						heroMap[loc[0]][loc[1]-1] = 1;
+						heroMap[loc[0]][loc[1]] = 0;
 						renderMap();
 					}
 				}
@@ -186,8 +192,8 @@
 				if (key == 39) {
 					var loc = findHero();
 					if (loc[1] < 9 && map[loc[0]][loc[1]+1] != 1) {
-						map[loc[0]][loc[1]+1] = 3;
-						map[loc[0]][loc[1]] = 0;
+						heroMap[loc[0]][loc[1]+1] = 1;
+						heroMap[loc[0]][loc[1]] = 0;
 						renderMap();
 					}
 				}
@@ -203,6 +209,9 @@
 				
 			}*/
 
+			dirt.onload = function() {
+				renderMap();
+			}
 
 			//Keeps window from scrolling when arrow keys or space bar are pressed
 			document.addEventListener('keydown', function(e) {
