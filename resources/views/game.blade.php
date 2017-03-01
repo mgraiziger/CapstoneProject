@@ -31,17 +31,19 @@
 			var canvas = document.querySelector('#canvas');
 			var context = canvas.getContext('2d');
 
-			
+			var hero = new Image();
+			var portal = new Image();
 			var grass = new Image();
 			var water = new Image();
 			var dirt = new Image();
-			var hero = new Image();
-			
 
+			
+			hero.src ='{{URL::asset('images/player.jpg')}}';
+			portal.src = '{{URL::asset('images/portal.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
 			dirt.src = '{{URL::asset('images/dirt.png')}}';
-			hero.src ='{{URL::asset('images/player.jpg')}}';
+			
 
 
 			//var xPos = 0;
@@ -58,10 +60,23 @@
 			[0,2,0,0,0,0,0,0,0,0],
 			[0,0,1,1,0,0,0,0,0,0],
 			[0,0,1,1,0,0,0,2,2,0],
-			[0,0,0,0,0,0,0,0,0,0]
+			[0,0,0,0,0,0,0,0,0,3]
 			];
 
-			var secondMap = [
+			var map1 = [
+			[0,0,0,1,1,0,0,0,0,0],
+			[0,0,0,1,0,0,2,2,0,0],
+			[0,0,0,1,0,0,0,0,0,0],
+			[0,0,0,1,1,1,0,0,0,0],
+			[0,0,0,0,0,1,0,0,0,0],
+			[0,2,0,0,0,1,1,0,0,0],
+			[0,2,0,0,0,0,0,0,0,0],
+			[0,0,1,1,0,0,0,0,0,0],
+			[0,0,1,1,0,0,0,2,2,0],
+			[0,0,0,0,0,0,0,0,0,3]
+			];
+
+			var map2 = [
 			[2,1,1,1,1,0,0,0,0,0],
 			[2,1,1,1,0,0,2,2,0,0],
 			[2,2,2,1,0,0,0,0,0,0],
@@ -71,21 +86,21 @@
 			[0,2,0,0,0,0,0,0,0,0],
 			[0,2,1,1,0,0,2,2,2,2],
 			[0,2,1,1,0,0,2,2,2,2],
-			[0,2,2,2,2,2,2,0,0,0]
+			[0,2,2,2,2,2,2,0,0,3]
 			];
 
 			//1 = hero; 0 = nothing;
 			var heroMap = [
-				[1,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0]	
+			[1,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0]	
 			];
 
 			var enemyMap = [
@@ -98,8 +113,10 @@
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0]
+			[0,0,0,0,0,0,0,0,0,3]
 			];
+
+			var heroOverworldLocation;
 
 			function renderMap() {
 				context.clearRect(0,0,500,500);
@@ -121,6 +138,10 @@
 
 					if(map[i][j] == 2) {
 						context.drawImage(dirt, xPos, yPos, 50, 50);
+					}
+
+					if(map[i][j] == 3) {
+						context.drawImage(portal, xPos, yPos, 50, 50);
 					}
 					xPos+=50;
 					}
@@ -151,12 +172,43 @@
 			function findHero() {
 				//loops through each array within the heroMap array and finds the 1 value representing the hero
 				//Could be replaced with a 2 value array variable which is incremented appropriately during each movement
+				var x = true;
 				var i = -1;
 				do {
 					i++;
 					var charLocation = heroMap[i].indexOf(1);
-				} while(charLocation == -1);
+					if (i == heroMap.length - 1) 
+						x = false;
+				} while(x && charLocation == -1);
 				return [i, charLocation];
+			}
+
+			function findPortal() {
+				var x = true;
+				var i = -1;
+				do {
+					i++;
+					var portalLocation = map[i].indexOf(3);
+					if (i === map.length -1)
+						x = false;
+				} while(x && portalLocation == -1);
+				return [i, portalLocation];
+			}
+
+			function battleChance() {
+				if (map != enemyMap) {
+					heroOverworldLocation = findHero();
+
+					var ran = Math.floor((Math.random() * 10) + 1);
+					switch(ran){
+						case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
+						break;
+						case 9: case 10:
+						map = enemyMap;
+						break;
+						
+					}
+				}
 			}
 
 
@@ -164,7 +216,7 @@
 				var key = event.keyCode;
 				//UP
 				if (key == 38) {
-					//First, find the hero on the map/array. findHero() returns a 2 value array where the first value is the players x coordinate, and the second value is the y coordinate
+					//First, find the hero on the map/array. findHero() returns a 2 value array where the first value is the players y coordinate, and the second value is the x coordinate (The coordinates are backwards, not for any particular reason besides me not noticing until I was done.)
 					var loc = findHero();
 
 					//Next, make sure he isn't trying to leave the array (would cause an error), or trying to walk on water
@@ -174,26 +226,24 @@
 
 						//if loc = [1,1], the player is attempting to move to [0,1]
 
-						//This sets the value of the array index 'above' (in this case) the player's current position to be the player
+						//This sets the value of the array index 'above' the player's current position to be the player (in this case)
 						heroMap[loc[0]-1][loc[1]] = 1;
 
 						//This changes the space the player was on into a 0
 						heroMap[loc[0]][loc[1]] = 0;
 
 						//Finally, we redraw the map
-						//TODO: Fix the player creating grass bug, modularize this function if possible
+						//TODO: Modularize this function if possible
 						
-						var ran = Math.floor((Math.random() * 10) + 1);
-							switch(ran){
-								case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
-								break;
-								case 8: case 9: case 10:
-								map = enemyMap;
-								
-								break;
-								
+						battleChance();
+						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+							if (map == enemyMap) {
+								map = map1;
+								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
+								heroMap[loc[0]-1][loc[1]] = 0;
 							}
-							renderMap();
+						}
+						renderMap();
 					}
 				}
 				//DOWN
@@ -202,6 +252,14 @@
 					if (loc[0] < 9 && map[loc[0]+1][loc[1]] != 1) {
 						heroMap[loc[0]+1][loc[1]] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
+						battleChance();
+						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+							if (map == enemyMap) {
+								map = map1;
+								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
+								heroMap[loc[0]+1][loc[1]] = 0;
+							}
+						}
 						renderMap();
 					}
 				}
@@ -211,6 +269,14 @@
 					if (loc[1] > 0 && map[loc[0]][loc[1]-1] != 1) {
 						heroMap[loc[0]][loc[1]-1] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
+						battleChance();
+						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+							if (map == enemyMap) {
+								map = map1;
+								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
+								heroMap[loc[0]][loc[1]-1] = 0;
+							}
+						}
 						renderMap();
 					}
 				}
@@ -220,6 +286,14 @@
 					if (loc[1] < 9 && map[loc[0]][loc[1]+1] != 1) {
 						heroMap[loc[0]][loc[1]+1] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
+						battleChance();
+						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+							if (map == enemyMap) {
+								map = map1;
+								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
+								heroMap[loc[0]][loc[1]+1] = 0;
+							}
+						}
 						renderMap();
 					}
 				}
