@@ -43,11 +43,6 @@
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
 			dirt.src = '{{URL::asset('images/dirt.png')}}';
-			
-
-
-			//var xPos = 0;
-			//var yPos = 0;
 
 			//0 = grass; 1 = water; 2 = dirt;
 			var map = [
@@ -60,9 +55,8 @@
 			[0,2,0,0,0,0,0,0,0,0],
 			[0,0,1,1,0,0,0,0,0,0],
 			[0,0,1,1,0,0,0,2,2,0],
-			[0,0,0,0,0,0,0,0,0,3]
+			[0,0,0,0,0,0,0,0,0,0]
 			];
-
 			var map1 = [
 			[0,0,0,1,1,0,0,0,0,0],
 			[0,0,0,1,0,0,2,2,0,0],
@@ -75,7 +69,6 @@
 			[0,0,1,1,0,0,0,2,2,0],
 			[0,0,0,0,0,0,0,0,0,3]
 			];
-
 			var map2 = [
 			[2,1,1,1,1,0,0,0,0,0],
 			[2,1,1,1,0,0,2,2,0,0],
@@ -87,6 +80,18 @@
 			[0,2,1,1,0,0,2,2,2,2],
 			[0,2,1,1,0,0,2,2,2,2],
 			[0,2,2,2,2,2,2,0,0,3]
+			];
+			var enemyMap = [
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[2,0,2,0,2,0,2,0,2,0],
+			[0,1,0,1,0,1,0,1,0,1],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,0],
+			[0,0,0,0,0,0,0,0,0,3]
 			];
 
 			//1 = hero; 0 = nothing;
@@ -103,20 +108,8 @@
 			[0,0,0,0,0,0,0,0,0,0]	
 			];
 
-			var enemyMap = [
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[2,0,2,0,2,0,2,0,2,0],
-			[0,1,0,1,0,1,0,1,0,1],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,3]
-			];
-
 			var heroOverworldLocation;
+			var loc;
 
 			function renderMap() {
 				context.clearRect(0,0,500,500);
@@ -184,6 +177,7 @@
 			}
 
 			function findPortal() {
+				//This finds a portal on the map if there is one. If there is not, it returns [9, -1]
 				var x = true;
 				var i = -1;
 				do {
@@ -196,6 +190,7 @@
 			}
 
 			function battleChance() {
+				//This uses a switch and a random number to start a battle (currently just a teleport to enemyMap)
 				if (map != enemyMap) {
 					heroOverworldLocation = findHero();
 
@@ -211,13 +206,57 @@
 				}
 			}
 
+			function teleport(key) {
+				//This checks of the player is standing on a portal and if so, teleports them (currently either away from the battle, from map1 to map2 depending on where they are currently). It uses the key variable as a parameter to determine direction.
+				
+				if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+					if (map == enemyMap) {
+						map = map1;
+						heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
+						switch(key) {
+							case 37:
+							heroMap[loc[0]][loc[1]-1] = 0;
+							break;
+							case 38:
+							heroMap[loc[0]-1][loc[1]] = 0;
+							break;
+							case 39:
+							heroMap[loc[0]][loc[1]+1] = 0;
+							break;
+							case 40:
+							heroMap[loc[0]+1][loc[1]] = 0;
+							break;
+						}
+					} else {
+						map = map2;
+						heroMap[0][0] = 1;
+						switch(key) {
+							case 37:
+							heroMap[loc[0]][loc[1]-1] = 0;
+							break;
+							case 38:
+							heroMap[loc[0]-1][loc[1]] = 0;
+							break;
+							case 39:
+							heroMap[loc[0]][loc[1]+1] = 0;
+							break;
+							case 40:
+							heroMap[loc[0]+1][loc[1]] = 0;
+							break;
+
+						}
+					}
+				}
+			}
+
 
 			function move(event) {
 				var key = event.keyCode;
+				loc = findHero();
 				//UP
 				if (key == 38) {
+					
 					//First, find the hero on the map/array. findHero() returns a 2 value array where the first value is the players y coordinate, and the second value is the x coordinate (The coordinates are backwards, not for any particular reason besides me not noticing until I was done.)
-					var loc = findHero();
 
 					//Next, make sure he isn't trying to leave the array (would cause an error), or trying to walk on water
 					//IMPORTANT: The if statement checks the map[] array for water, not the heroMap[] array
@@ -232,143 +271,48 @@
 						//This changes the space the player was on into a 0
 						heroMap[loc[0]][loc[1]] = 0;
 
+						//This uses a switch and a random number to start a battle (currently just a teleport to enemyMap) 
+						battleChance();
+
+						//This checks of the player is standing on a portal and if so, teleports them (currently either away from the battle, from map1 to map2 depending on where they are currently). It uses the key variable as a parameter to determine direction.
+						teleport(key);
 						//Finally, we redraw the map
 						//TODO: Modularize this function if possible
-						
-						battleChance();
-						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
-							if (map == enemyMap) {
-								map = map1;
-								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
-								heroMap[loc[0]-1][loc[1]] = 0;
-							}
-						}
 						renderMap();
 					}
 				}
 				//DOWN
 				if (key == 40) {
-					var loc = findHero();
 					if (loc[0] < 9 && map[loc[0]+1][loc[1]] != 1) {
 						heroMap[loc[0]+1][loc[1]] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
 						battleChance();
-						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
-							if (map == enemyMap) {
-								map = map1;
-								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
-								heroMap[loc[0]+1][loc[1]] = 0;
-							}
-						}
+						teleport(key);
 						renderMap();
 					}
 				}
 				//LEFT
 				if (key == 37) {
-					var loc = findHero();
+
 					if (loc[1] > 0 && map[loc[0]][loc[1]-1] != 1) {
 						heroMap[loc[0]][loc[1]-1] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
 						battleChance();
-						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
-							if (map == enemyMap) {
-								map = map1;
-								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
-								heroMap[loc[0]][loc[1]-1] = 0;
-							}
-						}
+						teleport(key);
 						renderMap();
 					}
 				}
 				//RIGHT
 				if (key == 39) {
-					var loc = findHero();
 					if (loc[1] < 9 && map[loc[0]][loc[1]+1] != 1) {
 						heroMap[loc[0]][loc[1]+1] = 1;
 						heroMap[loc[0]][loc[1]] = 0;
 						battleChance();
-						if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
-							if (map == enemyMap) {
-								map = map1;
-								heroMap[heroOverworldLocation[0]][heroOverworldLocation[1]] = 1;
-								heroMap[loc[0]][loc[1]+1] = 0;
-							}
-						}
+						teleport(key);
 						renderMap();
 					}
 				}
 			}
-
-				/*var characterId = document.getElementById('character')
-
-				var character = {
-
-					updown: function() {
-						var y = parseInt(getComputedStyle(characterId).top);
-						//UP
-						if (key == 38 && y >200) {
-							y-= 50;
-
-							//creates random number for up arrow
-							var ran = Math.floor((Math.random() * 10) + 1);
-							switch(ran){
-								case 1: case 2: case 3: case 4: case 5: case 6: case 7: 
-								break;
-								case 8: case 9: case 10:
-								context.clearRect(0,0,canvas.width, canvas.height);
-								
-								var tmpcanvas = document.querySelector('#canvas');
-								var tmpcontext = tmpcanvas.getContext('2d');
-								
-						//not drawing new images 
-						dirt.onload = function() {
-							for(var l=0; l<enemyMap.length; l++)
-							{
-								for(var k=0; k<enemyMap[l].length; k++){
-
-								if(enemyMap[l][k] == 0) {
-									context.drawImage(grass, xPos, yPos, 50, 50);
-									}
-					
-								if(enemyMap[l][k] == 1) {
-									context.drawImage(water, xPos, yPos, 50, 50);
-									}
-
-								if(enemyMap[l][k] == 2) {
-									context.drawImage(dirt, xPos, yPos, 50, 50);
-									}
-
-								xPos+=50;
-	
-								}
-								xPos =0;
-								yPos+=50;
-							}
-						}
-							break;
-							default:
-
-							}
-
-						//DOWN
-						} else if (key == 40 && y < 650) {
-							y += 50;
-						}
-						return y;
-					},
-					leftright: function() {
-						var x = parseInt(getComputedStyle(characterId).left);
-						//LEFT
-						if (key == 37 && x > 200) {
-							x-= 50;
-						//RIGHT
-						} else if (key == 39 && x < 650 ) {
-							x+= 50;
-						}
-						return x;
-					} 
-				};*/
-
 
 			/*function sleep(ms) {
 				return new Promise(resolve => setTimeout(resolve, ms));
@@ -395,7 +339,6 @@
 	
 		</script>
 
-		<!--<script src='{{URL::asset('js/game.js')}}'></script>-->
 		<footer id="foot">
 		<strong id="strong"> &#169; Copyright 2017</strong>
 			<p id="enjoy">ENJOY THE GAME!!!</p>
