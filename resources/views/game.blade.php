@@ -38,7 +38,7 @@
 			var dirt = new Image();
 
 			
-			hero.src ='{{URL::asset('images/player.jpg')}}';
+			hero.src ='{{URL::asset('images/player.png')}}';
 			portal.src = '{{URL::asset('images/portal.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
@@ -207,7 +207,7 @@
 			}
 
 			function teleport(key) {
-				//This checks of the player is standing on a portal and if so, teleports them (currently either away from the battle, from map1 to map2 depending on where they are currently). It uses the key variable as a parameter to determine direction.
+				//This checks of the player is standing on a portal and if so, teleports them (currently either away from the battle, from map1 to map2 depending on where they are currently). It uses the 'key' variable as a parameter to determine direction.
 				
 				if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
 					if (map == enemyMap) {
