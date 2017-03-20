@@ -25,8 +25,9 @@
 			</ul>
 		</div>-->
 			
+		<div id="canvasWrapper">
 		<canvas id="canvas" height="500" width="500"></canvas>
-		
+		</div>
 		<script type="text/javascript">
 			var canvas = document.querySelector('#canvas');
 			var context = canvas.getContext('2d');
@@ -84,7 +85,7 @@
 			[0,0,0,0,0,0,0,0,0,3]	
 			];
 			var map4 = [
-			[0,0,0,0,0,0,1,1,1,1],
+			[0,0,0,0,0,0,1,0,1,0],
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
@@ -96,7 +97,7 @@
 			[0,0,0,0,0,0,0,0,0,3]	
 			];
 			var map5 = [
-			[0,0,0,0,0,1,1,1,1,1],
+			[0,0,0,0,0,1,0,1,0,1],
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,0],
@@ -140,6 +141,9 @@
 			var map = map1;
 			var battle = false;
 
+			var wrapper = document.querySelector('#canvasWrapper');
+
+
 			function renderBattle() {
 				//This redraws the map to the battle image placeholder
 				context.clearRect(0,0,500,500);
@@ -147,12 +151,34 @@
 				//This disallows player movement behind the scenes
 				battle = true;
 				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
-				setTimeout(endBattle, 2000);
+				var button1 = document.createElement("button");
+				button1.innerHTML = "Fight";
+				button1.id = "button1";
+				var button2 = document.createElement("button");
+				button2.innerHTML = "Run";
+				button2.id = "button2";
+				wrapper.appendChild(button1);
+				wrapper.appendChild(button2);
+				//setTimeout(endBattle, 3000);
+
+				button1.onclick = function() {
+					console.log("button clicked");
+				}
+				button2.onclick = function() {
+					console.log("other button clicked");
+					endBattle();
+				}
 			}
 
 			function endBattle() {
+				if (battle) {
 				battle = false;
+				var elem = document.getElementById('button1');
+				elem.parentNode.removeChild(elem);
+				elem = document.getElementById('button2');
+				elem.parentNode.removeChild(elem);
 				renderMap();
+				}
 			}
 
 			function renderMap() {

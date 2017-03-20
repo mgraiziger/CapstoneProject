@@ -5,6 +5,18 @@
     left: 200px;
 }
 
+button {
+    position: absolute;
+    top: 600px;
+}
+
+#button1 {
+    left: 350px;
+}
+
+#button2 {
+    left: 550px;
+}
 
 .text{		
 	text-align:center;	
