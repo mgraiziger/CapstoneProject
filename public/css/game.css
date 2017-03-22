@@ -7,11 +7,20 @@
 
 button {
     position: absolute;
+    background-color: #008CBA;
+    border: 1px solid white;
+    text-align: center;  
+    font-size:24px;
+    height: 30px;
+    width: 75px;
     top: 600px;
 }
 
+button:hover{
+    background:red;
+}
 #button1 {
-    left: 350px;
+    left: 275px;
 }
 
 #button2 {

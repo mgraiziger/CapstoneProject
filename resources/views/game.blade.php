@@ -38,10 +38,11 @@
 			var water = new Image();
 			var dirt = new Image();
 			var battleBackground = new Image();
+			var battleSound = new Audio('{{URL::asset('images/danger.ogg')}}');
 			
 			hero.src ='{{URL::asset('images/player.png')}}';
 			portal.src = '{{URL::asset('images/portal.png')}}';
-			battleBackground.src = '{{URL::asset('images/battle.png')}}';
+			battleBackground.src = '{{URL::asset('images/benderBattle.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
 			dirt.src = '{{URL::asset('images/dirt.png')}}';
@@ -141,15 +142,17 @@
 			var map = map1;
 			var battle = false;
 
-			var wrapper = document.querySelector('#canvasWrapper');
+			var wrapper = document.querySelector('#canvasWrapper');	
 
 
 			function renderBattle() {
 				//This redraws the map to the battle image placeholder
 				context.clearRect(0,0,500,500);
-				context.drawImage(battleBackground, 0, 0, 500, 500);
+				//context.drawImage(battleBackground, 0, 0, 500, 500);
+				context.drawImage(battleBackground,0,0,500,500);
 				//This disallows player movement behind the scenes
 				battle = true;
+				battleSound.play();
 				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
 				var button1 = document.createElement("button");
 				button1.innerHTML = "Fight";
@@ -167,6 +170,7 @@
 				button2.onclick = function() {
 					console.log("other button clicked");
 					endBattle();
+					battleSound.pause();
 				}
 			}
 
