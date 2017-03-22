@@ -18,6 +18,15 @@ button {
     left: 550px;
 }
 
+#enemyLife {
+    position: absolute;
+    height: 25px;
+    width: 200px;
+    top: 300px;
+    left: 250px;
+    background-color: red;
+}
+
 .text{		
 	text-align:center;	
 	font-size:18px;	

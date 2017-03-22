@@ -143,6 +143,11 @@
 
 			var wrapper = document.querySelector('#canvasWrapper');
 
+			function fightButton() {
+
+
+			}
+
 
 			function renderBattle() {
 				//This redraws the map to the battle image placeholder
@@ -150,7 +155,8 @@
 				context.drawImage(battleBackground, 0, 0, 500, 500);
 				//This disallows player movement behind the scenes
 				battle = true;
-				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
+
+				//This creates and places the buttons on the screen. Their position is based on CSS for <button>'s and the id's #button1 and #button2
 				var button1 = document.createElement("button");
 				button1.innerHTML = "Fight";
 				button1.id = "button1";
@@ -159,10 +165,28 @@
 				button2.id = "button2";
 				wrapper.appendChild(button1);
 				wrapper.appendChild(button2);
-				//setTimeout(endBattle, 3000);
+
+				//This creates a progress bar to represent a life bar. It start full, at 100.
+				var life = 100;
+				var lifeBar = document.createElement("progress");
+				lifeBar.id = "enemyLife";
+				//These lines sets the value of bar. Max is the maximum of the bar (static 100), and Value is how much of the bar is filled
+				lifeBar.setAttribute("value", life);
+				lifeBar.setAttribute("max", "100");
+				wrapper.appendChild(lifeBar);
+
 
 				button1.onclick = function() {
 					console.log("button clicked");
+					//This subtracts 10 from the life value, and deletes and remakes the progress bar.
+					life -= 10;
+					lifeBar.parentNode.removeChild(lifeBar);
+					lifeBar.setAttribute("value", life);
+					wrapper.appendChild(lifeBar);
+					//This ends the battle if the lifebar is 0 or less
+					if (life <= 0) {
+						endBattle();
+					}
 				}
 				button2.onclick = function() {
 					console.log("other button clicked");
@@ -171,11 +195,14 @@
 			}
 
 			function endBattle() {
+				//This function deletes all elements created during a battle and renders the map.
 				if (battle) {
 				battle = false;
 				var elem = document.getElementById('button1');
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('button2');
+				elem.parentNode.removeChild(elem);
+				elem = document.getElementById('enemyLife');
 				elem.parentNode.removeChild(elem);
 				renderMap();
 				}
@@ -261,7 +288,7 @@
 
 			function battleChance() {
 				//This uses a switch and a random number to start a battle (currently just a screen redraw, a 2 second wait before you can move again)
-				if (JSON.stringify(findPortal()) != JSON.stringify(findHero())) {
+				if (JSON.stringify(findPortal()) !== JSON.stringify(findHero())) {
 					heroOverworldLocation = findHero();
 
 					var ran = Math.floor((Math.random() * 10) + 1);
@@ -277,7 +304,7 @@
 			}
 
 			function teleport(key) {
-				//This checks of the player is standing on a portal and if so, teleports them (currently either away from the battle, from map1 to map2 depending on where they are currently). It uses the 'key' variable as a parameter to determine direction.
+				//This checks of the player is standing on a portal and if so, teleports them. It uses the 'key' variable as a parameter to determine direction.
 				
 				//This if statement should keep a battle from triggering when the player moves to a portal (it would be weird if there were monsters on top of the portal). It does not currently work, probably because it is being called in the wrong order in move() or somewhere else.
 				if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
@@ -296,7 +323,7 @@
 						heroMap[loc[0]+1][loc[1]] = 0;
 						break;
 					}
-					switch(JSON.stringify(map)){
+					switch(JSON.stringify(map)) {
 						case JSON.stringify(map1):
 						map = map2;
 						break;
@@ -319,6 +346,7 @@
 			function move(event) {
 				var key = event.keyCode;
 				loc = findHero();
+
 				//the battle variable is a boolean that is true when in a battle. When in a battle, the player cannot move.
 				if (!battle) {
 					//UP
