@@ -39,6 +39,7 @@
 			var dirt = new Image();
 			var battleBackground = new Image();
 			var battleSound = new Audio('{{URL::asset('images/danger.ogg')}}');
+			battleSound.loop = true;
 			
 			hero.src ='{{URL::asset('images/player.png')}}';
 			portal.src = '{{URL::asset('images/portal.png')}}';
@@ -140,15 +141,58 @@
 
 			var loc;
 			var map = map1;
+			var movement = true;
 			var battle = false;
 
 			var wrapper = document.querySelector('#canvasWrapper');	
 
-			function fightButton() {
+			//This animation is a test that creates a purple rectangle starting from the bottom right corner extending to the upper left corner, then clears the rectangle in the same direction.
+			function testAnimation() {
+				//Movement is disables for the extent of the animation as the renderMap() call in the move() function makes the animation skip frames
+				movement = false;
+				var x;
+				var myInterval;
 
-
+				x = 0;
+				//setInterval() executes a function (first parameter) once every set number of milliseconds (second parameter)
+				//Note that setInterval() does not suspend the program while it executes, and that if you need to run code only after setInterval() has completed, you must put it inside the function being looped, in the path that leads to clearInterval(). clearInterval() ends the setInterval() loop.
+				myInterval = setInterval(animateRectangle, 3);
+				function animateRectangle() {
+					if (x == -501) {
+						clearInterval(myInterval);
+						//finishRect() must only be run after animateRectangle has completed, so it is included at the very end of this function. It is only run once from the first setInterval() because it is called after the clearInterval() statement.
+						finishRect();
+					} else {
+						//context.clearRect(0, 0, 500, 500);
+						//renderMap();
+						//Technically this draws 250 rectangles on top of one another, which I'm told should be avoided, but I don't think its a big deal as long as we don't leave them there for the duration of the game. The 2 lines above fix this, but I'm not sure which is worse preformance wise, drawing a bunch of rectancles on top of one another, or re-rendering the map 250 times
+						context.fillStyle="#A348A3";
+						context.fillRect(500, 500, x, x)
+						x--;
+					}
+				}
 			}
 
+			function finishRect() {
+				var x;
+				var myInterval;
+				
+				x = 500;
+				myInterval = setInterval(clearRectangle, 3);
+				function clearRectangle() {
+					if (x == -1) {
+						clearInterval(myInterval);
+						//movement should only be disabled after the setInterval() is complete, so we put if after clearInterval() so it is only run once at the end of the loop
+						movement = true;
+					} else {
+						context.clearRect(0, 0, 500, 500);
+						renderMap();
+						context.fillStyle="#A348A3";
+						context.fillRect(0, 0, x, x);
+						x--;
+					}
+				}
+			}
 
 			function renderBattle() {
 				//This redraws the map to the battle image placeholder
@@ -156,9 +200,9 @@
 				//context.drawImage(battleBackground, 0, 0, 500, 500);
 				context.drawImage(battleBackground,0,0,500,500);
 				//This disallows player movement behind the scenes
-				battle = true;
+				movement = false;
+				//This starts up the music
 				battleSound.play();
-				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
 
 				//This creates and places the buttons on the screen. Their position is based on CSS for <button>'s and the id's #button1 and #button2
 				var button1 = document.createElement("button");
@@ -195,20 +239,24 @@
 				button2.onclick = function() {
 					console.log("other button clicked");
 					endBattle();
-					battleSound.pause();
+					
 				}
 			}
 
 			function endBattle() {
 				//This function deletes all elements created during a battle and renders the map.
-				if (battle) {
-				battle = false;
+				if (!movement) {
+				movement = true;
 				var elem = document.getElementById('button1');
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('button2');
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('enemyLife');
 				elem.parentNode.removeChild(elem);
+
+				//These statements stop the music on battle completion, and reset the track to start from the beginning the next time it is played, which is the next battle
+				battleSound.pause();
+				battleSound.currentTime = 0;
 				renderMap();
 				}
 			}
@@ -313,6 +361,7 @@
 				
 				//This if statement should keep a battle from triggering when the player moves to a portal (it would be weird if there were monsters on top of the portal). It does not currently work, probably because it is being called in the wrong order in move() or somewhere else.
 				if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
+					testAnimation();
 					heroMap[0][0] = 1;
 					switch(key) {
 						case 37:
@@ -352,8 +401,8 @@
 				var key = event.keyCode;
 				loc = findHero();
 
-				//the battle variable is a boolean that is true when in a battle. When in a battle, the player cannot move.
-				if (!battle) {
+				//the movement variable is a boolean that is false when in a battle, or during an animation. The player cannot move in either of these circumstances.
+				if (movement) {
 					//UP
 					if (key == 38) {
 						
@@ -389,6 +438,7 @@
 							teleport(key);
 							renderMap();
 							battleChance();
+							
 						}
 					}
 					//LEFT

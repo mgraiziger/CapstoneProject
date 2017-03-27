@@ -30,9 +30,9 @@ button:hover{
 #enemyLife {
     position: absolute;
     height: 25px;
-    width: 200px;
+    width: 245px;
     top: 300px;
-    left: 250px;
+    left: 205px;
     background-color: red;
 }
 
