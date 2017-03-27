@@ -142,8 +142,8 @@
 			var loc;
 			var map = map1;
 			var movement = true;
-			var battle = false;
-
+			var teleporting = false;
+			
 			var wrapper = document.querySelector('#canvasWrapper');	
 
 			//This animation is a test that creates a purple rectangle starting from the bottom right corner extending to the upper left corner, then clears the rectangle in the same direction.
@@ -152,6 +152,7 @@
 				movement = false;
 				var x;
 				var myInterval;
+				teleporting = true;
 
 				x = 0;
 				//setInterval() executes a function (first parameter) once every set number of milliseconds (second parameter)
@@ -184,6 +185,7 @@
 						clearInterval(myInterval);
 						//movement should only be disabled after the setInterval() is complete, so we put if after clearInterval() so it is only run once at the end of the loop
 						movement = true;
+						teleporting = false;
 					} else {
 						context.clearRect(0, 0, 500, 500);
 						renderMap();
@@ -195,6 +197,8 @@
 			}
 
 			function renderBattle() {
+
+				
 				//This redraws the map to the battle image placeholder
 				context.clearRect(0,0,500,500);
 				//context.drawImage(battleBackground, 0, 0, 500, 500);
@@ -222,7 +226,6 @@
 				lifeBar.setAttribute("value", life);
 				lifeBar.setAttribute("max", "100");
 				wrapper.appendChild(lifeBar);
-
 
 				button1.onclick = function() {
 					console.log("button clicked");
@@ -341,17 +344,19 @@
 
 			function battleChance() {
 				//This uses a switch and a random number to start a battle (currently just a screen redraw, a 2 second wait before you can move again)
-				if (JSON.stringify(findPortal()) !== JSON.stringify(findHero())) {
-					heroOverworldLocation = findHero();
+				if (!teleporting) {
+					if (JSON.stringify(findPortal()) !== JSON.stringify(findHero())) {
+						heroOverworldLocation = findHero();
 
-					var ran = Math.floor((Math.random() * 10) + 1);
-					switch(ran){
-						case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-						break;
-						case 9: case 10:
-						renderBattle();
-						break;
-						
+						var ran = Math.floor((Math.random() * 10) + 1);
+						switch(ran){
+							case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
+							break;
+							case 9: case 10:
+							renderBattle();
+							break;
+							
+						}
 					}
 				}
 			}
