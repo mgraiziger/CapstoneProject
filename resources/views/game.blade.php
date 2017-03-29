@@ -37,14 +37,20 @@
 			var grass = new Image();
 			var water = new Image();
 			var dirt = new Image();
-			var battleBackground = new Image();
+			var bossOne = new Image();
+			var bossTwo = new Image();
+			var bossThree = new Image();
+			var bossFour = new Image();
 			var battleSound = new Audio('{{URL::asset('Sound/danger.ogg')}}');
 			
 			var startSound = new Audio('{{URL::asset('Sound/background.ogg')}}');
 			
 			hero.src ='{{URL::asset('images/player.png')}}';
 			portal.src = '{{URL::asset('images/portal.png')}}';
-			battleBackground.src = '{{URL::asset('images/benderBattle.png')}}';
+			bossOne.src = '{{URL::asset('images/boss1.png')}}';
+			bossTwo.src = '{{URL::asset('images/boss2.jpg')}}';
+			bossThree.src = '{{URL::asset('images/boss3.jpg')}}';
+			bossFour.src = '{{URL::asset('images/boss4.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
 			dirt.src = '{{URL::asset('images/dirt.png')}}';
@@ -156,10 +162,12 @@
 				//This redraws the map to the battle image placeholder
 				context.clearRect(0,0,500,500);
 				//context.drawImage(battleBackground, 0, 0, 500, 500);
-				context.drawImage(battleBackground,0,0,500,500);
+
+				battleEnemy();
 				//This disallows player movement behind the scenes
 				battle = true;
 
+				startSound.pause();
 				battleSound.play();
 				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
 
@@ -174,7 +182,7 @@
 				button2.id = "button2";
 				wrapper.appendChild(button1);
 				wrapper.appendChild(button2);
-
+				
 				//This creates a progress bar to represent a life bar. It start full, at 100.
 				var life = 100;
 				var lifeBar = document.createElement("progress");
@@ -184,6 +192,8 @@
 				lifeBar.setAttribute("max", "100");
 				wrapper.appendChild(lifeBar);
 
+				//see check battle function
+				// checkBattle();
 
 				button1.onclick = function() {
 					console.log("button clicked");
@@ -203,6 +213,46 @@
 					battleSound.pause();
 				}
 			}
+
+			//This function should check value of battleEnemy. However, no matter
+			//how I try to arrange this I can only get it to work for one battle. It will
+			//work for one though adjusting life bar accordingly. 
+
+			// function checkBattle(){
+
+			// 	if(battleEnemy() === context.drawImage(bossOne,0,0,500,500)){
+			// 		var life = 100;
+			// 		var lifeBar = document.createElement("progress");
+			// 		lifeBar.id = "enemyLife";
+			// 		lifeBar.setAttribute("value", life);
+			// 		lifeBar.setAttribute("max", "100");
+			// 		wrapper.appendChild(lifeBar);
+			// 	}
+			// 	  else if(battleEnemy() === context.drawImage(bossTwo,0,0,500,500)){
+			// 		var life = 120;
+			// 		var lifeBar = document.createElement("progress");
+			// 		lifeBar.id = "enemyLife";
+			// 		lifeBar.setAttribute("value", life);
+			// 		lifeBar.setAttribute("max", "120");
+			// 		wrapper.appendChild(lifeBar);
+			// 	}
+			// 	 else if(battleEnemy() === context.drawImage(bossThree,0,0,500,500)){
+			// 		var life = 140;
+			// 		var lifeBar = document.createElement("progress");
+			// 		lifeBar.id = "enemyLife";
+			// 		lifeBar.setAttribute("value", life);
+			// 		lifeBar.setAttribute("max", "140");
+			// 		wrapper.appendChild(lifeBar);
+			// 	}
+			// 	else{
+			// 		var life = 180;
+			// 		var lifeBar = document.createElement("progress");
+			// 		lifeBar.id = "enemyLife";
+			// 		lifeBar.setAttribute("value", life);
+			// 		lifeBar.setAttribute("max", "180");
+			// 		wrapper.appendChild(lifeBar);
+			// 	}
+			// }
 
 			function endBattle() {
 				//This function deletes all elements created during a battle and renders the map.
@@ -249,6 +299,7 @@
 					yPos+=50;
 				}
 				renderHero();
+				startSound.play();
 			}
 			
 			
@@ -311,6 +362,27 @@
 						
 					}
 				}
+			}
+
+			function battleEnemy(){
+				var bossRan = Math.floor((Math.random() * 10) + 1);
+
+				switch(bossRan){
+					case 1: case 2: case 3: case 4:
+					context.drawImage(bossOne,0,0,500,500);		
+					break;
+					case 5: case 6: case 7:
+					context.drawImage(bossTwo,0,0,500,500);
+					break;
+					case 8: case 9:
+					context.drawImage(bossThree,0,0,500,500);
+					break;
+					case 10:
+					context.drawImage(bossFour,0,0,500,500);
+					break;
+
+				}
+
 			}
 
 			function teleport(key) {
