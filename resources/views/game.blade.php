@@ -32,28 +32,22 @@
 			var canvas = document.querySelector('#canvas');
 			var context = canvas.getContext('2d');
 
-			var hero = new Image();
 			var portal = new Image();
 			var grass = new Image();
 			var water = new Image();
 			var dirt = new Image();
-			var bossOne = new Image();
-			var bossTwo = new Image();
-			var bossThree = new Image();
-			var bossFour = new Image();
-			var battleSound = new Audio('{{URL::asset('Sound/danger.ogg')}}');
-			
-			var startSound = new Audio('{{URL::asset('Sound/background.ogg')}}');
-			
-			hero.src ='{{URL::asset('images/player.png')}}';
+
 			portal.src = '{{URL::asset('images/portal.png')}}';
-			bossOne.src = '{{URL::asset('images/boss1.png')}}';
-			bossTwo.src = '{{URL::asset('images/boss2.jpg')}}';
-			bossThree.src = '{{URL::asset('images/boss3.jpg')}}';
-			bossFour.src = '{{URL::asset('images/boss4.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
 			dirt.src = '{{URL::asset('images/dirt.png')}}';
+			
+			var battleSound = new Audio('{{URL::asset('Sound/danger.ogg')}}');
+			battleSound.loop = true;
+			
+			var worldSound = new Audio('{{URL::asset('Sound/background.ogg')}}');
+			worldSound.volume = 0.75;
+			worldSound.loop = true;
 
 			//0 = grass; 1 = water; 2 = dirt;
 			var map;
@@ -117,20 +111,6 @@
 			[0,0,0,0,0,0,0,0,0,0],
 			[0,0,0,0,0,0,0,0,0,3]	
 			];
-			/*
-			var enemyMap = [
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[2,0,2,0,2,0,2,0,2,0],
-			[0,1,0,1,0,1,0,1,0,1],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,0],
-			[0,0,0,0,0,0,0,0,0,3]
-			];
-			*/
 
 			//1 = hero; 0 = nothing;
 			var heroMap = [
@@ -146,31 +126,215 @@
 			[0,0,0,0,0,0,0,0,0,0]	
 			];
 
+			var heroImage = new Image();
+			var b1Image = new Image();
+			var b2Image = new Image();
+			var b3Image = new Image();
+			var b4Image = new Image();
+			var b5Image = new Image();
+
+			heroImage.src ='{{URL::asset('images/player.png')}}';
+			b1Image.src = '{{URL::asset('images/B1.png')}}';
+			b2Image.src = '{{URL::asset('images/B2.png')}}';
+			b3Image.src = '{{URL::asset('images/B3.png')}}';
+			b4Image.src = '{{URL::asset('images/B4.png')}}';
+			b5Image.src = '{{URL::asset('images/B5.png')}}';
+
+			//Stats
+			var hero = {
+				image: heroImage,
+				str: 10,
+				con: 100,
+				dex: 10,
+				intel: 10,
+				wis: 10,
+				char: 10,
+				luck: 10
+			}
+
+			var b1 = {
+				image: b1Image,
+				str: 3,
+				con: 3,
+				dex: 3,
+				intel: 3,
+				wis: 3,
+				char: 3,
+				luck: 3
+			}
+
+			var b2 = {
+				image: b2Image,
+				str: 5,
+				con: 5,
+				dex: 5,
+				intel: 5,
+				wis: 5,
+				char: 5,
+				luck: 5
+			}
+
+			var b3 = {
+				image: b3Image,
+				str: 7,
+				con: 7,
+				dex: 7,
+				intel: 7,
+				wis: 7,
+				char: 7,
+				luck: 7
+			}
+
+			var b4 = {
+				image: b4Image,
+				str: 9,
+				con: 9,
+				dex: 9,
+				intel: 9,
+				wis: 9,
+				char: 9,
+				luck: 9
+			}
+
+			var b5 = {
+				image: b5Image,
+				str: 10,
+				con: 10,
+				dex: 10,
+				intel: 10,
+				wis: 10,
+				char: 10,
+				luck: 10
+			}
+
 			var loc;
 			var map = map1;
-			var battle = false;
+			var movement = true;
+			var teleporting = false;
+			var enemyLife;
+			var enemyMax;
 
-			var wrapper = document.querySelector('#canvasWrapper');	
+			var wrapper = document.querySelector('#canvasWrapper');
 
-			function fightButton() {
+			//This animation is called during teleportation. It creates a purple rectangle starting from the bottom right corner extending to the upper left corner, then clears the rectangle in the same direction.
+			function teleportAnimation() {
+				//Movement is disables for the extent of the animation as the renderMap() call in the move() function makes the animation skip frames
+				movement = false;
+				var x;
+				var y;
+				var myInterval;
+				teleporting = true;
 
+				x = 0;
+				y = 450;
+				//setInterval() executes a function (first parameter) once every set number of milliseconds (second parameter)
+				//Note that setInterval() does not suspend the program while it executes, and that if you need to run code only after setInterval() has completed, you must put it inside the function being looped, in the path that leads to clearInterval(). clearInterval() ends the setInterval() loop.
+				myInterval = setInterval(animateRectangle, 1);
+				function animateRectangle() {
+					if (x == -501) {
+						clearInterval(myInterval);
+						//finishRect() must only be run after animateRectangle has completed, so it is included at the very end of this function. It is only run once from the first setInterval() because it is called after the clearInterval() statement.
+						switch(JSON.stringify(map)) {
+						case JSON.stringify(map1):
+						map = map2;
+						break;
+						case JSON.stringify(map2):
+						map = map3;
+						break;
+						case JSON.stringify(map3):
+						map = map4;
+						break;
+						case JSON.stringify(map4):
+						map = map5;
+						break;
+						case JSON.stringify(map5):
+						window.alert("You Win!");
+						break;
+					}
+						finishRect();
+					} else {
+						context.clearRect(0, 0, 500, 500);
+						renderMap();
+						context.fillStyle="#A348A3";
+						context.fillRect(500, 500, x, x);
+						context.drawImage(hero.image, y, y, 50, 50);
+						if (x <= -50) {
+							y -= 0.5;
+						}
+						x--;
+					}
+				}
+			}
+
+			function finishRect() {
+				var x;
+				var y = 224.5;
+				var myInterval;
+				heroMap[0][0] = 1;
+				
+				x = 500;
+				myInterval = setInterval(clearRectangle, 1);
+				function clearRectangle() {
+					if (x == -1) {
+						clearInterval(myInterval);
+						//movement should only be disabled after the setInterval() is complete, so we put if after clearInterval() so it is only run once at the end of the loop
+						movement = true;
+						teleporting = false;
+					} else {
+						context.clearRect(0, 0, 500, 500);
+						renderMap();
+						context.fillStyle="#A348A3";
+						context.fillRect(0, 0, x, x);
+						context.drawImage(hero.image, y, y, 50, 50);
+						if (y > 0) {
+							y -= 0.5;
+						}
+						x--;
+					}
+				}
+			}
+
+			function battleEnemy(){
+				var bossRan = Math.floor((Math.random() * 10) + 1);
+
+				switch(bossRan){
+					case 1: case 2: case 3:
+					return b1;
+					break;
+
+					case 4: case 5:
+					return b2;
+					break;
+
+					case 6: case 7:
+					return b3;
+					break;
+
+					case 8: case 9: 
+					return b4;
+					break;
+
+					case 10:
+					return b5;
+					break;
+
+				}
 
 			}
 
-
 			function renderBattle() {
-				//This redraws the map to the battle image placeholder
-				context.clearRect(0,0,500,500);
-				//context.drawImage(battleBackground, 0, 0, 500, 500);
-
-				battleEnemy();
 				//This disallows player movement behind the scenes
-				battle = true;
-
-				startSound.pause();
+				movement = false;
+				worldSound.pause();
 				battleSound.play();
-				//This is what we have for now instead of a battle. It is a 2 second wait, afterwards we assume the player has 'won' and put them back on the map
 
+				context.clearRect(0,0,500,500);
+
+				//This selects an enemy at random (chances for particular enemies can be seen in battleEnemy()). The enemy variable is an object containing that character's battle image, and their stats.
+				var enemy = battleEnemy();
+				context.drawImage(enemy.image, 0, 0, 500, 500);
+				enemyLife = enemy.con * 10;
+				enemyMax = enemyLife;
 
 				//This creates and places the buttons on the screen. Their position is based on CSS for <button>'s and the id's #button1 and #button2
 
@@ -183,87 +347,46 @@
 				wrapper.appendChild(button1);
 				wrapper.appendChild(button2);
 				
-				//This creates a progress bar to represent a life bar. It start full, at 100.
-				var life = 100;
+				//This creates a progress bar to represent a life bar.
 				var lifeBar = document.createElement("progress");
 				lifeBar.id = "enemyLife";
-				//These lines sets the value of bar. Max is the maximum of the bar (static 100), and Value is how much of the bar is filled
-				lifeBar.setAttribute("value", life);
-				lifeBar.setAttribute("max", "100");
+				//These lines sets the value of bar, or how much is filled at the start
+				lifeBar.setAttribute("value", enemyLife);
+				lifeBar.setAttribute("max", enemyMax);
 				wrapper.appendChild(lifeBar);
 
-				//see check battle function
-				// checkBattle();
-
+				//This determines what happens when the player clicks the "Fight" button
 				button1.onclick = function() {
-					console.log("button clicked");
-					//This subtracts 10 from the life value, and deletes and remakes the progress bar.
-					life -= 10;
+					//This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
+					enemyLife -= hero.str + Math.floor(Math.random() * 10 -5);
 					lifeBar.parentNode.removeChild(lifeBar);
 					lifeBar.setAttribute("value", life);
 					wrapper.appendChild(lifeBar);
 					//This ends the battle if the lifebar is 0 or less
-					if (life <= 0) {
+					if (enemyLife <= 0) {
 						endBattle();
 					}
 				}
+				//This determines what happens when the player clicks the "Run" button
 				button2.onclick = function() {
-					console.log("other button clicked");
 					endBattle();
-					battleSound.pause();
+					
 				}
 			}
 
-			//This function should check value of battleEnemy. However, no matter
-			//how I try to arrange this I can only get it to work for one battle. It will
-			//work for one though adjusting life bar accordingly. 
-
-			// function checkBattle(){
-
-			// 	if(battleEnemy() === context.drawImage(bossOne,0,0,500,500)){
-			// 		var life = 100;
-			// 		var lifeBar = document.createElement("progress");
-			// 		lifeBar.id = "enemyLife";
-			// 		lifeBar.setAttribute("value", life);
-			// 		lifeBar.setAttribute("max", "100");
-			// 		wrapper.appendChild(lifeBar);
-			// 	}
-			// 	  else if(battleEnemy() === context.drawImage(bossTwo,0,0,500,500)){
-			// 		var life = 120;
-			// 		var lifeBar = document.createElement("progress");
-			// 		lifeBar.id = "enemyLife";
-			// 		lifeBar.setAttribute("value", life);
-			// 		lifeBar.setAttribute("max", "120");
-			// 		wrapper.appendChild(lifeBar);
-			// 	}
-			// 	 else if(battleEnemy() === context.drawImage(bossThree,0,0,500,500)){
-			// 		var life = 140;
-			// 		var lifeBar = document.createElement("progress");
-			// 		lifeBar.id = "enemyLife";
-			// 		lifeBar.setAttribute("value", life);
-			// 		lifeBar.setAttribute("max", "140");
-			// 		wrapper.appendChild(lifeBar);
-			// 	}
-			// 	else{
-			// 		var life = 180;
-			// 		var lifeBar = document.createElement("progress");
-			// 		lifeBar.id = "enemyLife";
-			// 		lifeBar.setAttribute("value", life);
-			// 		lifeBar.setAttribute("max", "180");
-			// 		wrapper.appendChild(lifeBar);
-			// 	}
-			// }
-
 			function endBattle() {
 				//This function deletes all elements created during a battle and renders the map.
-				if (battle) {
-				battle = false;
+				if (!movement) {
+				movement = true;
 				var elem = document.getElementById('button1');
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('button2');
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('enemyLife');
 				elem.parentNode.removeChild(elem);
+				battleSound.pause();
+				battleSound.currentTime = 0;
+				worldSound.play();
 				renderMap();
 				}
 			}
@@ -299,7 +422,7 @@
 					yPos+=50;
 				}
 				renderHero();
-				startSound.play();
+				
 			}
 			
 			
@@ -311,7 +434,7 @@
 				{
 					for(let j=0; j<heroMap[i].length; j++) {
 						if(heroMap[i][j] == 1) {
-							context.drawImage(hero, xPos, yPos, 50, 50);
+							context.drawImage(hero.image, xPos, yPos, 50, 50);
 						}
 						xPos+=50;
 					}
@@ -364,33 +487,13 @@
 				}
 			}
 
-			function battleEnemy(){
-				var bossRan = Math.floor((Math.random() * 10) + 1);
-
-				switch(bossRan){
-					case 1: case 2: case 3: case 4:
-					context.drawImage(bossOne,0,0,500,500);		
-					break;
-					case 5: case 6: case 7:
-					context.drawImage(bossTwo,0,0,500,500);
-					break;
-					case 8: case 9:
-					context.drawImage(bossThree,0,0,500,500);
-					break;
-					case 10:
-					context.drawImage(bossFour,0,0,500,500);
-					break;
-
-				}
-
-			}
+			
 
 			function teleport(key) {
-				//This checks of the player is standing on a portal and if so, teleports them. It uses the 'key' variable as a parameter to determine direction.
-				
-				//This if statement should keep a battle from triggering when the player moves to a portal (it would be weird if there were monsters on top of the portal). It does not currently work, probably because it is being called in the wrong order in move() or somewhere else.
 				if (JSON.stringify(findHero()) == JSON.stringify(findPortal())) {
-					heroMap[0][0] = 1;
+					teleportAnimation();
+					//This statement is executed in the teleportAnimation() function so the hero doesn't appear in the top corner until he is animated there.
+					//heroMap[0][0] = 1;
 					switch(key) {
 						case 37:
 						heroMap[loc[0]][loc[1]-1] = 0;
@@ -405,7 +508,8 @@
 						heroMap[loc[0]+1][loc[1]] = 0;
 						break;
 					}
-					switch(JSON.stringify(map)) {
+					//This switch is called in the teleportAnimation() so the map doesn't change until the whole screen is covered in the animated rectangle
+					/*switch(JSON.stringify(map)) {
 						case JSON.stringify(map1):
 						map = map2;
 						break;
@@ -421,7 +525,7 @@
 						case JSON.stringify(map5):
 						window.alert("You Win!");
 						break;
-					}
+					}*/
 				}
 			}
 
@@ -429,8 +533,8 @@
 				var key = event.keyCode;
 				loc = findHero();
 
-				//the battle variable is a boolean that is true when in a battle. When in a battle, the player cannot move.
-				if (!battle) {
+				//the movement variable is a boolean that is false when in a battle, or during an animation. The player cannot move in either of these circumstances.
+				if (movement) {
 					//UP
 					if (key == 38) {
 						
@@ -494,6 +598,7 @@
 
 			//This should be replaced with a promise if I can figure out how promises work.
 			dirt.onload = function() {
+				worldSound.play();
 				renderMap();
 			}
 
