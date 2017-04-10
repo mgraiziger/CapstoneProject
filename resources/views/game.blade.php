@@ -35,12 +35,13 @@
 			var portal = new Image();
 			var grass = new Image();
 			var water = new Image();
-			var dirt = new Image();
+			var dirt;
+			//var dirt = new Image();
 
 			portal.src = '{{URL::asset('images/portal.png')}}';
 			grass.src = '{{URL::asset('images/grass.png')}}';
 			water.src = '{{URL::asset('images/water.png')}}';
-			dirt.src = '{{URL::asset('images/dirt.png')}}';
+			//dirt.src = '{{URL::asset('images/dirt.png')}}';
 			
 			var battleSound = new Audio('{{URL::asset('Sound/danger.ogg')}}');
 			battleSound.loop = true;
@@ -207,6 +208,9 @@
 				luck: 10
 			}
 
+
+			
+
 			var loc;
 			var map = map1;
 			var movement = true;
@@ -328,7 +332,7 @@
 				worldSound.pause();
 				battleSound.play();
 
-				context.clearRect(0,0,500,500);
+				context.clearRect(0, 0, 500, 500);
 
 				//This selects an enemy at random (chances for particular enemies can be seen in battleEnemy()). The enemy variable is an object containing that character's battle image, and their stats.
 				var enemy = battleEnemy();
@@ -346,22 +350,27 @@
 				button2.id = "button2";
 				wrapper.appendChild(button1);
 				wrapper.appendChild(button2);
-				
-				//This creates a progress bar to represent a life bar.
-				var lifeBar = document.createElement("progress");
-				lifeBar.id = "enemyLife";
-				//These lines sets the value of bar, or how much is filled at the start
-				lifeBar.setAttribute("value", enemyLife);
-				lifeBar.setAttribute("max", enemyMax);
-				wrapper.appendChild(lifeBar);
+
+				//This uses Canvas to draw a life bar
+				var barLength = 240;
+				context.fillStyle = '#09c400';
+				context.fillRect(10, 90, barLength, 30);
+				context.font = "30px Impact";
+				context.strokeStyle = "#ffffff";
+				context.strokeText(enemyLife, 15, 117);
+
 
 				//This determines what happens when the player clicks the "Fight" button
 				button1.onclick = function() {
 					//This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
 					enemyLife -= hero.str + Math.floor(Math.random() * 10 -5);
-					lifeBar.parentNode.removeChild(lifeBar);
-					lifeBar.setAttribute("value", life);
-					wrapper.appendChild(lifeBar);
+					let total = enemyLife * 240 / enemyMax;
+					barLength = total;
+					context.clearRect(0, 0, 500, 500);
+					context.drawImage(enemy.image, 0, 0, 500, 500)
+					context.fillRect(10, 90, barLength, 30);
+					context.strokeText(enemyLife, 15, 117);
+
 					//This ends the battle if the lifebar is 0 or less
 					if (enemyLife <= 0) {
 						endBattle();
@@ -382,8 +391,7 @@
 				elem.parentNode.removeChild(elem);
 				elem = document.getElementById('button2');
 				elem.parentNode.removeChild(elem);
-				elem = document.getElementById('enemyLife');
-				elem.parentNode.removeChild(elem);
+
 				battleSound.pause();
 				battleSound.currentTime = 0;
 				worldSound.play();
@@ -596,11 +604,27 @@
 				}
 			}
 
-			//This should be replaced with a promise if I can figure out how promises work.
-			dirt.onload = function() {
+			/*let myFirstPromise = new Promise((resolve, reject) => {
+    			setTimeout(function() {
+       				resolve("Success!");}, 1000);
+			})
+			*/
+
+			let imagePromise = new Promise(function(resolve, reject) {
+				dirt = new Image();
+				dirt.onload = function() {
+					resolve("Success");
+				}
+				dirt.onerror = function() {
+					reject("Failure");
+				}
+				dirt.src = '{{URL::asset('images/dirt.png')}}';
+			})
+
+			imagePromise.then(function() {
 				worldSound.play();
 				renderMap();
-			}
+			})
 
 			//Keeps window from scrolling when arrow keys or space bar are pressed
 			document.addEventListener('keydown', function(e) {
