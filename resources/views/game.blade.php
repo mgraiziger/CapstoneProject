@@ -74,15 +74,20 @@
 		<!--Load Move-->
 		<script type="text/javascript" src="{{URL::asset('js/move.js')}}"></script>
 
+		<!--Load Render Text-->
+		<script type="text/javascript" src="{{URL::asset('js/renderText.js')}}"></script>
+
+		<!--Load Render Start-->
+		<script type="text/javascript" src="{{URL::asset('js/renderStart.js')}}"></script>
+
 		<script type="text/javascript">
 
 			var canvas = document.querySelector('#canvas');
 			var context = canvas.getContext('2d');
 			var wrapper = document.querySelector('#canvasWrapper');
 
-			var dirt;
-
-			var loc;
+			var startPicture;
+			
 			var map = map1;
 			var movement = true;
 			var teleporting = false;
@@ -96,19 +101,19 @@
 			*/
 
 			let imagePromise = new Promise(function(resolve, reject) {
-				dirt = new Image();
-				dirt.onload = function() {
+				startPicture = new Image();
+				startPicture.onload = function() {
 					resolve("Success");
 				}
-				dirt.onerror = function() {
+				startPicture.onerror = function() {
 					reject("Failure");
 				}
-				dirt.src = '{{URL::asset('images/dirt.png')}}';
+				startPicture.src ="{{URL::asset('images/startMenu.png')}}"
 			})
 
 			imagePromise.then(function() {
 				worldSound.play();
-				renderMap();
+				renderStart();
 			})
 
 			//Keeps window from scrolling when arrow keys or space bar are pressed

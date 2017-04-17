@@ -20,12 +20,13 @@ var hero = {
     dex: 10,
     intel: 10,
     wis: 10,
-    char: 10,
-    luck: 10
+    charis: 10,
+    luck: 9
 }
 
 var b1 = {
     image: b1Image,
+    name: "Ghost",
     str: 3,
     con: 3,
     dex: 3,
@@ -37,6 +38,7 @@ var b1 = {
 
 var b2 = {
     image: b2Image,
+    name: "Bear",
     str: 5,
     con: 5,
     dex: 5,
@@ -48,6 +50,7 @@ var b2 = {
 
 var b3 = {
     image: b3Image,
+    name: "Tree",
     str: 7,
     con: 7,
     dex: 7,
@@ -59,6 +62,7 @@ var b3 = {
 
 var b4 = {
     image: b4Image,
+    name: "Criminal",
     str: 9,
     con: 9,
     dex: 9,
@@ -70,6 +74,7 @@ var b4 = {
 
 var b5 = {
     image: b5Image,
+    name: "Robot",
     str: 10,
     con: 10,
     dex: 10,

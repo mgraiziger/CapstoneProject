@@ -27,6 +27,66 @@ button:hover{
     left: 550px;
 }
 
+input {
+    position: absolute;
+    width: 30px;
+    left: 600px;
+}
+
+#input1 {
+    top: 250px;
+}
+#input2 {
+    top: 325px;
+}
+#input3 {
+    top: 400px;
+}
+#input4 {
+    top: 475px;
+}
+#input5 {
+    top: 550px;
+}
+#input6 {
+    top: 625px;
+}
+button#confirm {
+    position: absolute;
+    top:640px;
+    left: 412px;
+    font-size: 20px;
+}
+#p1 {
+    position: absolute;
+    left: 640px;
+    top: 235px;
+}
+#p2 {
+    position: absolute;
+    left: 640px;
+    top: 310px;
+}
+#p3 {
+    position: absolute;
+    left: 640px;
+    top: 385px;
+}
+#p4 {
+    position: absolute;
+    left: 640px;
+    top: 460px
+}
+#p5 {
+    position: absolute;
+    left: 640px;
+    top: 535px;
+}
+#p6 {
+    position: absolute;
+    left: 640px;
+    top: 610px;
+}
 .text{		
 	text-align:center;	
 	font-size:18px;	

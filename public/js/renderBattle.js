@@ -9,6 +9,7 @@ function renderBattle() {
     //This selects an enemy at random (chances for particular enemies can be seen in battleEnemy()). The enemy variable is an object containing that character's battle image, and their stats.
     var enemy = battleEnemy();
     context.drawImage(enemy.image, 0, 0, 500, 500);
+    
     enemyLife = enemy.con * 10;
     enemyMax = enemyLife;
 
@@ -30,7 +31,6 @@ function renderBattle() {
     context.font = "30px Impact";
     context.strokeStyle = "#ffffff";
     context.strokeText(enemyLife, 15, 117);
-
 
     //This determines what happens when the player clicks the "Fight" button
     button1.onclick = function() {

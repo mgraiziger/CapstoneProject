@@ -1,16 +1,11 @@
 function battleChance() {
-    //This uses a switch and a random number to start a battle (currently just a screen redraw, a 2 second wait before you can move again)
+    //This uses the hero's luck attribute to determine how often a battle is triggered. It rolls a random number 1-10 and compares that to the hero's luck. If the random number is greater than or equal to the hero's luck, a battle is triggered. As a result, if the hero's luck is 11 or greater, battles are not possible.
     if (!teleporting) {
         if (JSON.stringify(findPortal()) !== JSON.stringify(findHero())) {
             heroOverworldLocation = findHero();
-
             var ran = Math.floor((Math.random() * 10) + 1);
-            switch(ran){
-                case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-                break;
-                case 9: case 10:
+            if (ran >= hero.luck) {
                 renderBattle();
-                break;
             }
         }
     }
