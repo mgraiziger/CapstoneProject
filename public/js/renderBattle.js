@@ -13,6 +13,10 @@ function renderBattle() {
     enemyLife = enemy.con * 10;
     enemyMax = enemyLife;
 
+    //Sets player health * con
+    var playerHealth = hero.con * 10;
+    playerMax = playerHealth;
+
     //This creates and places the buttons on the screen. Their position is based on CSS for <button>'s and the id's #button1 and #button2
 
     var button1 = document.createElement("button");
@@ -32,20 +36,40 @@ function renderBattle() {
     context.strokeStyle = "#ffffff";
     context.strokeText(enemyLife, 15, 117);
 
+    //Player Life bar
+    var pBarLength = 240;
+    context.fillStyle = '#FF0000';
+    context.fillRect(255, 90, pBarLength, 30);
+    context.font = "30px Impact";
+    context.strokeStyle = "#ffffff";
+    context.strokeText(playerHealth, 445,117);
+
     //This determines what happens when the player clicks the "Fight" button
     button1.onclick = function() {
         //This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
         enemyLife -= hero.str + Math.floor(Math.random() * 10 -5);
+        playerHealth -= enemy.str + Math.floor(Math.random() * 10 -5);
+        let pTotal = playerHealth * 240 / playerMax;
         let total = enemyLife * 240 / enemyMax;
         barLength = total;
+        pBarLength = pTotal;
         context.clearRect(0, 0, 500, 500);
         context.drawImage(enemy.image, 0, 0, 500, 500)
+        context.fillStyle = '#09c400';
         context.fillRect(10, 90, barLength, 30);
+        context.fillStyle = '#FF0000';
+        context.fillRect(255,90, pBarLength, 30);
         context.strokeText(enemyLife, 15, 117);
+        context.strokeText(playerHealth,445,117);
 
         //This ends the battle if the lifebar is 0 or less
         if (enemyLife <= 0) {
             endBattle();
+        }
+        if(playerHealth <= 0){
+            endBattle();
+            window.alert("You Lose!");
+            location.reload();
         }
     }
     //This determines what happens when the player clicks the "Run" button

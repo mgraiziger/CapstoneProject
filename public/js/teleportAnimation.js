@@ -31,6 +31,7 @@ function teleportAnimation() {
             break;
             case JSON.stringify(map5):
             window.alert("You Win!");
+            location.reload();
             break;
         }
             finishRect();

@@ -93,6 +93,8 @@
 			var teleporting = false;
 			var enemyLife;
 			var enemyMax;
+			var playerMax;
+			
 
 			/*let myFirstPromise = new Promise((resolve, reject) => {
     			setTimeout(function() {
