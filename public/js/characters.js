@@ -15,13 +15,13 @@ b5Image.src = 'images/B5.png';
 //Stats
 var hero = {
     image: heroImage,
-    str: 10,
-    con: 100,
-    dex: 10,
-    intel: 10,
-    wis: 10,
-    charis: 10,
-    luck: 9
+    str: 5,
+    con: 5,
+    dex: 5,
+    intel: 5,
+    wis: 5,
+    charis: 5,
+    luck: 5
 }
 
 var b1 = {

@@ -19,6 +19,7 @@ function renderText(text, x, y, width, height) {
 
     function animateText() {
         //This if statement executes before each word is written, and compares the length of the word about to be written to the space left in the current line. If the line does not have enough space, the word is displayed on the next line
+        movement = false;
         if (textArray[index] === " ") {
             wordStart = index;
             wordEnd = textArray.indexOf(" ", wordStart + 1);
@@ -35,7 +36,8 @@ function renderText(text, x, y, width, height) {
 
         if (index == textArray.length) {
             clearInterval(myInterval);
+            movement = true;
         }
     }
-    myInterval = setInterval(animateText, 50);
+    myInterval = setInterval(animateText, 25);
 }
