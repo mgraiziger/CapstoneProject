@@ -26,6 +26,12 @@ button:hover{
 #button2 {
     left: 550px;
 }
+button#confirm {
+    position: absolute;
+    top:640px;
+    left: 412px;
+    font-size: 20px;
+}
 /*Applies to all <input> tags where the src attribute contains the substring "plus"*/
 input[src*="plus"] {
     position: absolute;
