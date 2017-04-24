@@ -46,35 +46,65 @@ function renderBattle() {
 
     //This determines what happens when the player clicks the "Fight" button
     button1.onclick = function() {
-        //This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
-        enemyLife -= hero.str + Math.floor(Math.random() * 10 -5);
-        playerHealth -= enemy.str + Math.floor(Math.random() * 10 -5);
-        let pTotal = playerHealth * 240 / playerMax;
-        let total = enemyLife * 240 / enemyMax;
-        barLength = total;
-        pBarLength = pTotal;
-        context.clearRect(0, 0, 500, 500);
-        context.drawImage(enemy.image, 0, 0, 500, 500)
-        context.fillStyle = '#09c400';
-        context.fillRect(10, 90, barLength, 30);
-        context.fillStyle = '#FF0000';
-        context.fillRect(255,90, pBarLength, 30);
-        context.strokeText(enemyLife, 15, 117);
-        context.strokeText(playerHealth,445,117);
+        if (!textPrinting) {
+            //This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
+            var enemyDamage = ran5();
+            var playerDamage = ran5();
+            enemyLife -= hero.str + enemyDamage;
+            playerHealth -= enemy.str + playerDamage;
+            let pTotal = playerHealth * 240 / playerMax;
+            let total = enemyLife * 240 / enemyMax;
+            barLength = total;
+            pBarLength = pTotal;
+            context.clearRect(0, 0, 500, 500);
+            context.drawImage(enemy.image, 0, 0, 500, 500)
+            context.font = "30px Impact";
+            context.fillStyle = '#09c400';
+            context.fillRect(10, 90, barLength, 30);
+            context.fillStyle = '#FF0000';
+            context.fillRect(255,90, pBarLength, 30);
+            context.strokeText(enemyLife, 15, 117);
+            context.strokeText(playerHealth,445,117);
 
-        //This ends the battle if the lifebar is 0 or less
-        if (enemyLife <= 0) {
-            endBattle();
-        }
-        if(playerHealth <= 0){
-            endBattle();
-            window.alert("You Lose!");
-            location.reload();
+            //This ends the battle if the lifebar is 0 or less
+            if (enemyLife <= 0) {
+                endBattle();
+            }
+            if(playerHealth <= 0){
+                endBattle();
+                window.alert("You Lose!");
+                location.reload();
+            }
         }
     }
     //This determines what happens when the player clicks the "Run" button
     button2.onclick = function() {
-        endBattle();
+        if (!textPrinting) {
+            //var ran = Math.floor(Math.random() * 10 -5);
+            if (hero.dex > enemy.dex + ran5()) {
+                endBattle();
+            } else {
+                var playerDamage = ran5();
+                playerHealth -= enemy.str + playerDamage;
+                context.clearRect(0, 0, 500, 500);
+                context.drawImage(enemy.image, 0, 0, 500, 500)
+                context.font = "30px Impact";
+                context.fillStyle = '#09c400';
+                context.fillRect(10, 90, barLength, 30);
+                context.fillStyle = '#FF0000';
+                context.fillRect(255,90, pBarLength, 30);
+                context.strokeText(enemyLife, 15, 117);
+                context.strokeText(playerHealth,445,117);
+                context.strokeText("- " + playerDamage, 290, 155);
+                renderText("YOU TRY TO RUN, BUT " + enemy.name + " IS TOO FAST! " + enemy.name + " HITS YOU AS YOU TRY TO ESCAPE!", 355, 150, 130, 200);
+            }
+        }
+        
+        
         
     }
+}
+
+function ran5() {
+    return Math.floor(Math.random() * 10 -5);
 }
