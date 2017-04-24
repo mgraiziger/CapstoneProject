@@ -1,36 +1,15 @@
+var total = 50;
+var statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+
+var startPicture = new Image();
+startPicture.src ='../images/startMenu.png'
+
 //This function renders the first screen and prompts the user for stats for their hero.
 function renderStart() {
     movement = false;
-    var total = 45;
-    var startPicture = new Image();
-    startPicture.src ='../images/startMenu.png'
     context.drawImage(startPicture, 0, 0, 500, 500);
-    //This function writes the string in the first param, starting at the location specified by parameters 2 and 3. Parameters 4 and 5 determine the size of the box containing the text.
-    //I spent a while writing this function and this is the only place I could think to put it.
-    
 
-    //This creates input elements and paragraph elements to get user input.
-    let y = 75;
-    let pArray = ["STR", "CON", "DEX", "INT", "WIS", "LUCK"];
-    let statNames = ["str", "con", "dex", "intel", "wis", "luck"];
-    for (let i = 1; i < 7; i++) {
-        context.strokeStyle = "White";
-        context.fillStyle = "Black";
-        context.font = "30px Impact";
-        context.fillText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
-        context.strokeText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
-        y += 75;
-        
-        var input = document.createElement("input");
-        input.setAttribute("maxlength", "3");
-        input.setAttribute("id", "input"+i);
-        wrapper.appendChild(input);
-        var p = document.createElement("p");
-        p.setAttribute("id", "p"+i);
-        p.innerHTML = pArray[i-1];
-        wrapper.appendChild(p);
-        
-    }
+    renderStartStats();
 
     renderText("Please enter your chosen stats. STR modifies your damage to enemies. LUCK determines how often you encounter enemies. The rest are just for show.", 50, 150, 250, 185);
 
@@ -41,14 +20,16 @@ function renderStart() {
     
     button.onclick = function() {
         //This captures all the values the user inputs. The inputs are made into Number objects because Javascript still doesn't know the difference between strings and ints.
+        /*
         var stats = document.querySelectorAll("input");
-        hero.str = new Number (stats[0].value).valueOf() || 10;
-        hero.con = new Number (stats[1].value).valueOf() || 12;
+        hero.str = new Number (stats[0].value).valueOf() || 12;
+        hero.con = new Number (stats[1].value).valueOf() || 15;
         hero.dex = new Number (stats[2].value).valueOf() || 5;
         hero.intel = new Number (stats[3].value).valueOf() || 5;
         hero.wis = new Number (stats[4].value).valueOf() || 5;
         hero.luck = new Number (stats[5].value).valueOf() || 8;
-        var statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+        */
+        statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
         if (statsTotal <= total) {
             movement = true;
             //This deletes all the DOM elements except for the canvas.
@@ -58,10 +39,95 @@ function renderStart() {
             renderMap();
         } else {
             context.drawImage(startPicture, 0, 0, 500, 500);
-            renderText("You're hero's stats are too high. You have 35 point to spend total. You have " + statsTotal + " points spent including preset defaults", 50, 150, 250, 185);
+            renderText("You're hero's stats are too high. You have " + total +  " point to spend total. You have " + statsTotal + " points spent including preset defaults", 50, 150, 250, 185);
         }
 
     }
 
+}
 
+//This function renders the player stat names and their current values as the player changes them.
+function renderStartStats() {
+    context.clearRect(0, 0, 500, 500);
+    context.drawImage(startPicture, 0, 0, 500, 500);
+    context.strokeStyle = "White";
+    context.fillStyle = "Black";
+    context.font = "30px Impact";
+    context.fillText("Remaining Points: " + (total-statsTotal), 50, 130);
+    context.strokeText("Remaining Points: " + (total-statsTotal), 50, 130);
+    let y = 75;
+    let pArray = ["STR", "CON", "DEX", "INT", "WIS", "LUCK"];
+    let statNames = ["str", "con", "dex", "intel", "wis", "luck"];
+    for (let i = 1; i < 7; i++) {
+        context.strokeStyle = "White";
+        context.fillStyle = "Black";
+        context.font = "30px Impact";
+        context.fillText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
+        context.strokeText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
+        y += 75;
+        var plus = document.createElement("input");
+        plus.setAttribute("type", "image");
+        plus.setAttribute("id", "plus"+i);
+        plus.setAttribute("src", "../images/plus.png");
+        plus.setAttribute("onClick", "plusMinusClick(this.id)");
+        wrapper.appendChild(plus);
+        var minus = document.createElement("input");
+        minus.setAttribute("type", "image");
+        minus.setAttribute("id", "minus"+i);
+        minus.setAttribute("src", "../images/minus.png");
+        minus.setAttribute("onClick", "plusMinusClick(this.id)");
+        wrapper.appendChild(minus);
+    }
+
+}
+//This function is what changes the chosen stats
+function plusMinusClick(clickedID) {
+    if (!textPrinting) {
+        statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+        if (statsTotal < total || clickedID.includes("minus")) {
+            //statPointsRemaining--;
+            switch(clickedID) {
+                case "plus1":
+                    hero.str++;
+                    break;
+                case "plus2":
+                    hero.con++;
+                    break;
+                case "plus3":
+                    hero.dex++;
+                    break;
+                case "plus4":
+                    hero.intel++;
+                    break;
+                case "plus5":
+                    hero.wis++;
+                    break;
+                case "plus6":
+                    hero.luck++;
+                    break;
+                case "minus1":
+                    hero.str--;
+                    break;
+                case "minus2":
+                    hero.con--;
+                    break;
+                case "minus3":
+                    hero.dex--;
+                    break;
+                case "minus4":
+                    hero.intel--;
+                    break;
+                case "minus5":
+                    hero.wis--;
+                    break;
+                case "minus6":
+                    hero.luck--;
+                    break;
+            }
+            statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+            renderStartStats();
+        } else {
+            renderText("You have no stat points left to spend.", 50, 150, 250, 75);
+        }
+    }
 }

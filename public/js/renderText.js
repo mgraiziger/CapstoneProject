@@ -1,5 +1,6 @@
 //This function will write given text (var text) at a given coordinate (var x, var y) in a rectangle of a given size (var width, var height). It will also automatically wrap a word if it is too long to be displayed in the space it has left. Note that if it is given a word that is too long to be displayed in the entire width of the rectangle (var width), it will write that word off the right side of the rectangle, and the word may not be readable.
 function renderText(text, x, y, width, height) {
+    textPrinting = true;
     text = text.concat(" ");
     var index = 0;
     var left = x + 15;
@@ -30,13 +31,15 @@ function renderText(text, x, y, width, height) {
             left = x;
             }
         }
+        context.font = "15px Courier New";
+        context.fillStyle = "White";
         context.fillText(textArray[index], left, top)
         index++;
         left += 15;
 
         if (index == textArray.length) {
             clearInterval(myInterval);
-            movement = true;
+            setTimeout(()=>{textPrinting = false;}, 2000);
         }
     }
     myInterval = setInterval(animateText, 25);

@@ -91,10 +91,10 @@
 			var map = map1;
 			var movement = true;
 			var teleporting = false;
+			var textPrinting = false;
 			var enemyLife;
 			var enemyMax;
 			var playerMax;
-			
 
 			/*let myFirstPromise = new Promise((resolve, reject) => {
     			setTimeout(function() {

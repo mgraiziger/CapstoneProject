@@ -26,66 +26,52 @@ button:hover{
 #button2 {
     left: 550px;
 }
-
-input {
+/*Applies to all <input> tags where the src attribute contains the substring "plus"*/
+input[src*="plus"] {
     position: absolute;
     width: 30px;
-    left: 600px;
+    left: 655px;
 }
-
-#input1 {
-    top: 250px;
-}
-#input2 {
-    top: 325px;
-}
-#input3 {
-    top: 400px;
-}
-#input4 {
-    top: 475px;
-}
-#input5 {
-    top: 550px;
-}
-#input6 {
-    top: 625px;
-}
-button#confirm {
+input[src*="minus"] {
     position: absolute;
-    top:640px;
-    left: 412px;
-    font-size: 20px;
+    width: 30px;
+    left: 530px;
 }
-#p1 {
-    position: absolute;
-    left: 640px;
-    top: 235px;
+#plus1 {
+    top: 248px;
 }
-#p2 {
-    position: absolute;
-    left: 640px;
-    top: 310px;
+#plus2 {
+    top: 323px;
 }
-#p3 {
-    position: absolute;
-    left: 640px;
-    top: 385px;
+#plus3 {
+    top: 398px;
 }
-#p4 {
-    position: absolute;
-    left: 640px;
-    top: 460px
+#plus4 {
+    top: 473px;
 }
-#p5 {
-    position: absolute;
-    left: 640px;
-    top: 535px;
+#plus5 {
+    top: 548px;
 }
-#p6 {
-    position: absolute;
-    left: 640px;
-    top: 610px;
+#plus6 {
+    top: 623px;
+}
+#minus1 {
+    top: 248px;
+}
+#minus2 {
+    top: 323px;
+}
+#minus3 {
+    top: 398px;
+}
+#minus4 {
+    top: 473px;
+}
+#minus5 {
+    top: 548px;
+}
+#minus6 {
+    top: 623px;
 }
 .text{		
 	text-align:center;	
