@@ -48,10 +48,10 @@ function renderBattle() {
     button1.onclick = function() {
         if (!textPrinting) {
             //This subtracts from the enemyLife value, and deletes and remakes the progress bar. The amount subtracted is the hero's strength + a random number between -5 and 5;
-            var enemyDamage = ran5();
-            var playerDamage = ran5();
-            enemyLife -= hero.str + enemyDamage;
-            playerHealth -= enemy.str + playerDamage;
+            var enemyDamage = hero.str + ran5();
+            var playerDamage = enemy.str + ran5();
+            enemyLife -= enemyDamage;
+            playerHealth -= playerDamage;
             let pTotal = playerHealth * 240 / playerMax;
             let total = enemyLife * 240 / enemyMax;
             barLength = total;
@@ -65,7 +65,9 @@ function renderBattle() {
             context.fillRect(255,90, pBarLength, 30);
             context.strokeText(enemyLife, 15, 117);
             context.strokeText(playerHealth,445,117);
-
+            context.strokeText(enemyDamage,200,155);
+            context.strokeText(playerDamage,290,155);
+        
             //This ends the battle if the lifebar is 0 or less
             if (enemyLife <= 0) {
                 endBattle();
