@@ -84,8 +84,8 @@ function renderBattle() {
             if (hero.dex > enemy.dex + ran5()) {
                 endBattle();
             } else {
-                var playerDamage = ran5();
-                playerHealth -= enemy.str + playerDamage;
+                var playerDamage = enemy.str + ran5();
+                playerHealth -= playerDamage;
                 context.clearRect(0, 0, 500, 500);
                 context.drawImage(enemy.image, 0, 0, 500, 500)
                 context.font = "30px Impact";
@@ -95,8 +95,18 @@ function renderBattle() {
                 context.fillRect(255,90, pBarLength, 30);
                 context.strokeText(enemyLife, 15, 117);
                 context.strokeText(playerHealth,445,117);
-                context.strokeText("- " + playerDamage, 290, 155);
+                if (playerDamage.toString().includes("-")) {
+                    var stringDamage = playerDamage.toString().replace('-', '');
+                    context.strokeText("+ " + stringDamage, 290, 155);
+                } else {
+                    context.strokeText("- " + playerDamage, 290, 155);
                 renderText("YOU TRY TO RUN, BUT " + enemy.name + " IS TOO FAST! " + enemy.name + " HITS YOU AS YOU TRY TO ESCAPE!", 355, 150, 130, 200);
+                }
+                if(playerHealth <= 0){
+                    endBattle();
+                    window.alert("You Lose!");
+                    location.reload();
+                }  
             }
         }
         
