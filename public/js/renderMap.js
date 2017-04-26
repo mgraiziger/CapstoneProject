@@ -1,3 +1,87 @@
+function renderFog() {
+    var position = findHero();
+/*
+    fogMap[position[0]][position[1]] = 1;
+    var arrayRoom = true;
+    var arrayRoomUp = true;
+    var arrayRoomDown = true;
+    var arrayRoomLeft = true;
+    var arrayRoomRight = true;
+    var i = 0;
+    debugger;
+    while (arrayRoom) {
+        if (position[0]-i < 0) {
+            arrayRoomUP = false;
+        }
+        if (position[0]+i > 9) {
+            arrayRoomDown = false;
+        }
+        if (position[1]-i < 0) {
+            arrayRoomLeft = false;
+        }
+        if (position[0]-i < 0) {
+            arrayRoomUP = false;
+        }
+        if (position[1]+i > 9) {
+            arrayRoomRight = false;
+        }
+        if (i > hero.intel) {
+            arrayRoom = false;
+        }
+        if (!arrayRoomUp && ! arrayRoomDown && !arrayRoomLeft && !arrayRoomRight) {
+            arrayRoom = false;
+        }
+        if (arrayRoomUp) {
+            fogMap[position[0]-i][position[1]] = 1;
+            if (arrayRoomLeft) {
+                fogMap[position[0]-i][position[1]-i] = 1;
+            }
+            if (arrayRoomRight) {
+                fogMap[position[0]-i][position[1]+i] = 1;
+            }
+        }
+        if (arrayRoomDown) {
+            fogMap[position[0]+i][position[1]] = 1;
+            if (arrayRoomLeft) {
+                fogMap[position[0]+i][position[1]-i] = 1;
+            }
+            if (arrayRoomRight) {
+                fogMap[position[0]+i][position[1]+i] = 1;
+            }
+        }
+        if (arrayRoomLeft) {
+            fogMap[position[0][position[1]-i]] = 1;
+        }
+        if (arrayRoomRight) {
+            fogMap[position[0][position[1]+i]] = 1;
+        }
+        i++;
+    }
+    
+    if (hero.intel > 0) {
+        if (position[0]-hero.intel < 0) {
+            for(let i = position[0]; i >= 0; i--) {
+                fogMap[i][position[1]] = 1;
+            }
+        } else {
+            
+        }
+    }
+
+    var xPos = 0;
+    var yPos = 0;
+    for(let i = 0; i<fogMap.length; i++) {
+        for (let j = 0; j<fogMap[i].length; j++) {
+            if(fogMap[i][j] === 0) {
+                context.drawImage(fog, xPos, yPos, 50, 50);
+            }
+            xPos+=50;
+        }
+        xPos=0;
+        yPos+=50;
+    }
+    */
+}
 function renderMap() {
     context.clearRect(0,0,500,500);
     var xPos = 0;
@@ -32,6 +116,7 @@ function renderMap() {
         xPos=0;
         yPos+=50;
     }
+    renderFog();
     renderHero();
     
 }

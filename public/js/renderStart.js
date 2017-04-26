@@ -19,29 +19,30 @@ function renderStart() {
     wrapper.appendChild(button);
     
     button.onclick = function() {
-        //This captures all the values the user inputs. The inputs are made into Number objects because Javascript still doesn't know the difference between strings and ints.
-        /*
-        var stats = document.querySelectorAll("input");
-        hero.str = new Number (stats[0].value).valueOf() || 12;
-        hero.con = new Number (stats[1].value).valueOf() || 15;
-        hero.dex = new Number (stats[2].value).valueOf() || 5;
-        hero.intel = new Number (stats[3].value).valueOf() || 5;
-        hero.wis = new Number (stats[4].value).valueOf() || 5;
-        hero.luck = new Number (stats[5].value).valueOf() || 8;
-        */
-        statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
-        if (statsTotal <= total) {
-            movement = true;
-            //This deletes all the DOM elements except for the canvas.
-            while (wrapper.children.length > 1) {
-                wrapper.removeChild(wrapper.lastChild);
+        if (!textPrinting) {
+            //This captures all the values the user inputs. The inputs are made into Number objects because Javascript still doesn't know the difference between strings and ints.
+            /*
+            var stats = document.querySelectorAll("input");
+            hero.str = new Number (stats[0].value).valueOf() || 12;
+            hero.con = new Number (stats[1].value).valueOf() || 15;
+            hero.dex = new Number (stats[2].value).valueOf() || 5;
+            hero.intel = new Number (stats[3].value).valueOf() || 5;
+            hero.wis = new Number (stats[4].value).valueOf() || 5;
+            hero.luck = new Number (stats[5].value).valueOf() || 8;
+            */
+            statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+            if (statsTotal <= total) {
+                movement = true;
+                //This deletes all the DOM elements except for the canvas.
+                while (wrapper.children.length > 1) {
+                    wrapper.removeChild(wrapper.lastChild);
+                }
+                renderMap();
+            } else {
+                context.drawImage(startPicture, 0, 0, 500, 500);
+                renderText("You're hero's stats are too high. You have " + total +  " point to spend total. You have " + statsTotal + " points spent including preset defaults", 50, 150, 250, 185);
             }
-            renderMap();
-        } else {
-            context.drawImage(startPicture, 0, 0, 500, 500);
-            renderText("You're hero's stats are too high. You have " + total +  " point to spend total. You have " + statsTotal + " points spent including preset defaults", 50, 150, 250, 185);
         }
-
     }
 
 }
