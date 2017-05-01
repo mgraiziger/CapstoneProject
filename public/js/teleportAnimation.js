@@ -34,6 +34,7 @@ function teleportAnimation() {
             location.reload();
             break;
         }
+            fogMap = fogBase;
             finishRect();
         } else {
             context.clearRect(0, 0, 500, 500);
@@ -61,6 +62,7 @@ function finishRect() {
         if (x == -1) {
             clearInterval(myInterval);
             //movement should only be disabled after the setInterval() is complete, so we put if after clearInterval() so it is only run once at the end of the loop
+            
             movement = true;
             teleporting = false;
         } else {
