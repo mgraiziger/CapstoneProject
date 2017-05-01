@@ -89,7 +89,7 @@
 			var startPicture;
 			
 			var map = map1;
-			var movement = true;
+			var movement;
 			var teleporting = false;
 			var textPrinting = false;
 			var enemyLife;

@@ -2,7 +2,7 @@ function move(event) {
     var key = event.keyCode;
     loc = findHero();
 
-    //the movement variable is a boolean that is false when in a battle, or during an animation. The player cannot move in either of these circumstances.
+    //the movement variable is a boolean that is set to false when the hero should not be able to move (in a battle, teleporting)
     if (movement) {
         //UP
         if (key == 38) {

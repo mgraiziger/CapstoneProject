@@ -11,7 +11,7 @@ function renderStart() {
 
     renderStartStats();
 
-    renderText("Please enter your chosen stats. STR modifies your damage to enemies. LUCK determines how often you encounter enemies. The rest are just for show.", 50, 150, 250, 185);
+    renderText("STR modifies your damage to enemies. CON determines your health. DEX helps you run away. INT clears the fog of war. LUCK determines how often you encounter enemies.", 50, 150, 250, 200);
 
     var button = document.createElement("button");
     button.setAttribute("id", "confirm");
@@ -20,16 +20,6 @@ function renderStart() {
     
     button.onclick = function() {
         if (!textPrinting) {
-            //This captures all the values the user inputs. The inputs are made into Number objects because Javascript still doesn't know the difference between strings and ints.
-            /*
-            var stats = document.querySelectorAll("input");
-            hero.str = new Number (stats[0].value).valueOf() || 12;
-            hero.con = new Number (stats[1].value).valueOf() || 15;
-            hero.dex = new Number (stats[2].value).valueOf() || 5;
-            hero.intel = new Number (stats[3].value).valueOf() || 5;
-            hero.wis = new Number (stats[4].value).valueOf() || 5;
-            hero.luck = new Number (stats[5].value).valueOf() || 8;
-            */
             statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
             if (statsTotal <= total) {
                 movement = true;

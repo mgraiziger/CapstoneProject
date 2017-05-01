@@ -34,7 +34,19 @@ function teleportAnimation() {
             location.reload();
             break;
         }
-            fogMap = fogBase;
+            //We had a const fogBase with this value in the maps.js file, but somehow it kept getting overwritten by fogMap when we were trying to set fogMap back to fogBase. This doesn't get overwritten by anything.
+            fogMap = [
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0]	
+                ];
             finishRect();
         } else {
             context.clearRect(0, 0, 500, 500);
