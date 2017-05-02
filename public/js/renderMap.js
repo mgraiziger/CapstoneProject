@@ -1,7 +1,6 @@
 function renderFog() {
     var position = findHero();
-    var xPos = 0;
-    var yPos = 0;
+    
     
     //This checks if the hero's intelligence would de-fog an area above the map (throws an error)
     if (position[0] - hero.intel < 0) {
@@ -16,7 +15,9 @@ function renderFog() {
                     fogMap[startPoint[0]+i][startPoint[1]+j] = 1;
                 }
             }*/
-            for (let i = 0; i < position[0] + hero.intel + 1; i++) {
+            
+            //This removes fog from the fogMap variable in a square around the hero. The loop is terminated when i reaches the number of spaces equal to the hero's intelligence, or when i is 9 (indicating the end of the map has been reached)
+            for (let i = 0; i < position[0] + hero.intel + 1 && i < 10; i++) {
                 for (let j = 0; j < position[1] + hero.intel + 1; j++) {
                     fogMap[startPoint[0]+i][startPoint[1]+j] = 1;
                 }
@@ -28,7 +29,7 @@ function renderFog() {
                 fogMap[startPoint[0]+i][startPoint[1]+j] = 1;
             }
         }*/
-        for (let i = 0; i < position[0] + hero.intel + 1; i++) {
+        for (let i = 0; i < position[0] + hero.intel + 1 && i < 10; i++) {
             for (let j = 0; j < hero.intel + 1; j++) {
                 fogMap[startPoint[0]+i][startPoint[1]+j] = 1;
             }
@@ -42,7 +43,9 @@ function renderFog() {
         }
     }
 
-
+    //This renders the fog over the map
+    var xPos = 0;
+    var yPos = 0;
     for(let i = 0; i<fogMap.length; i++) {
         for (let j = 0; j<fogMap[i].length; j++) {
             if(fogMap[i][j] === 0) {

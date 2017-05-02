@@ -3,7 +3,7 @@ function endBattle() {
     if (!movement) {
     movement = true;
     }
-
+    //This while removes all children under the wrapper <div> except the canvas itself
     while (wrapper.children.length > 1) {
         wrapper.removeChild(wrapper.lastChild);
     }

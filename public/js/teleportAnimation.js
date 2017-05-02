@@ -34,7 +34,7 @@ function teleportAnimation() {
             location.reload();
             break;
         }
-            //We had a const fogBase with this value in the maps.js file, but somehow it kept getting overwritten by fogMap when we were trying to set fogMap back to fogBase. This doesn't get overwritten by anything.
+            //We had a const fogBase with this value in the maps.js file, but somehow it kept getting overwritten by fogMap when we were trying to set fogMap back to fogBase. This can't be overwritten by anything.
             fogMap = [
                 [0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0],
@@ -74,7 +74,6 @@ function finishRect() {
         if (x == -1) {
             clearInterval(myInterval);
             //movement should only be disabled after the setInterval() is complete, so we put if after clearInterval() so it is only run once at the end of the loop
-            
             movement = true;
             teleporting = false;
         } else {
@@ -85,6 +84,8 @@ function finishRect() {
             context.drawImage(hero.image, y, y, 50, 50);
             if (y > 0) {
                 y -= 0.5;
+            } else {
+                renderHero();
             }
             x--;
         }

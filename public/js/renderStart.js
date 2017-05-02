@@ -11,17 +11,24 @@ function renderStart() {
 
     renderStartStats();
 
-    renderText("STR modifies your damage to enemies. CON determines your health. DEX helps you run away. INT clears the fog of war. LUCK determines how often you encounter enemies.", 50, 150, 250, 200);
+    renderText("STR modifies your damage to enemies. CON determines your health. DEX helps you run away. INT clears the fog of war. WIS restores your health when you move. LUCK determines how often you encounter enemies.", 50, 150, 255, 240);
 
+    //Declares and creates the START button
     var button = document.createElement("button");
     button.setAttribute("id", "confirm");
     button.innerHTML = "START";
     wrapper.appendChild(button);
     
+    //Determines what happens when the START button is clicked
     button.onclick = function() {
         if (!textPrinting) {
+
+            //This prevents the player from entering stats above the possible total for their character. Technically, this should be impossible given the button setup, but it hurts nothing by being here
             statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
             if (statsTotal <= total) {
+                //This sets the hero's starting health
+                playerMax = hero.con * 10;
+                playerHealth = hero.con * 10;
                 movement = true;
                 //This deletes all the DOM elements except for the canvas.
                 while (wrapper.children.length > 1) {
@@ -37,31 +44,37 @@ function renderStart() {
 
 }
 
-//This function renders the player stat names and their current values as the player changes them.
+//This function renders the player stat names and their current values as the player changes them. It is called every time the player clicks a plus or minus button.
 function renderStartStats() {
     context.clearRect(0, 0, 500, 500);
     context.drawImage(startPicture, 0, 0, 500, 500);
+    context.textAlign = "start";
     context.strokeStyle = "White";
     context.fillStyle = "Black";
     context.font = "30px Impact";
+    context.textAlign = "start";
     context.fillText("Remaining Points: " + (total-statsTotal), 50, 130);
     context.strokeText("Remaining Points: " + (total-statsTotal), 50, 130);
     let y = 75;
     let pArray = ["STR", "CON", "DEX", "INT", "WIS", "LUCK"];
     let statNames = ["str", "con", "dex", "intel", "wis", "luck"];
+    //This loop creates all the plus and minus buttons as well as the text and number value between them.
     for (let i = 1; i < 7; i++) {
+        //Writes text/stat number
         context.strokeStyle = "White";
         context.fillStyle = "Black";
         context.font = "30px Impact";
         context.fillText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
         context.strokeText(pArray[i-1] + " " + hero[statNames[i-1]], 370, y);
         y += 75;
+        //Creates plus button
         var plus = document.createElement("input");
         plus.setAttribute("type", "image");
         plus.setAttribute("id", "plus"+i);
         plus.setAttribute("src", "../images/plus.png");
         plus.setAttribute("onClick", "plusMinusClick(this.id)");
         wrapper.appendChild(plus);
+        //Creates minus button
         var minus = document.createElement("input");
         minus.setAttribute("type", "image");
         minus.setAttribute("id", "minus"+i);
@@ -71,12 +84,12 @@ function renderStartStats() {
     }
 
 }
-//This function is what changes the chosen stats
+//This function is what changes the chosen stats. It is called when a plus or minus button is clicked. It gets the ID of the button clicked to determine what to change. Each button has a unique ID. This function doesn't allow a player to lower any stat below 1.
 function plusMinusClick(clickedID) {
     if (!textPrinting) {
         statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;
+        //If the player tries to add more stats than allowed, their change isn't allowed unless the button pressed is a minus.
         if (statsTotal < total || clickedID.includes("minus")) {
-            //statPointsRemaining--;
             switch(clickedID) {
                 case "plus1":
                     hero.str++;
@@ -97,22 +110,34 @@ function plusMinusClick(clickedID) {
                     hero.luck++;
                     break;
                 case "minus1":
-                    hero.str--;
+                    if (hero.str > 1) {
+                        hero.str--;
+                    }
                     break;
                 case "minus2":
-                    hero.con--;
+                    if (hero.con > 1) {
+                        hero.con--;
+                    }
                     break;
                 case "minus3":
-                    hero.dex--;
+                    if (hero.dex > 1) {
+                        hero.dex--;
+                    }
                     break;
                 case "minus4":
-                    hero.intel--;
+                    if (hero.intel > 1) {
+                        hero.intel--;
+                    }
                     break;
                 case "minus5":
-                    hero.wis--;
+                    if (hero.wis > 1) {
+                        hero.wis--;
+                    }
                     break;
                 case "minus6":
-                    hero.luck--;
+                    if (hero.luck > 1) {
+                        hero.luck--;
+                    }
                     break;
             }
             statsTotal = hero.str + hero.con + hero.dex + hero.intel + hero.wis + hero.luck;

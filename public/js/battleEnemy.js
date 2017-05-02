@@ -1,5 +1,6 @@
+//This function returns an enemy from the characters.js file. Each enemy has stats specific to them, and the higher the enemy's stats, the less likely they will be returned.
 function battleEnemy(){
-    var bossRan = Math.floor((Math.random() * 10) + 1);
+    let bossRan = Math.floor((Math.random() * 10) + 1);
     switch(bossRan){
         case 1: case 2: case 3:
         return b1;

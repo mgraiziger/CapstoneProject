@@ -32,13 +32,14 @@ function renderText(text, x, y, width, height) {
         }
         context.font = "15px Courier New";
         context.fillStyle = "White";
+        context.textAlign = "start";
         context.fillText(textArray[index], left, top)
         index++;
         left += 15;
 
         if (index == textArray.length) {
             clearInterval(myInterval);
-            setTimeout(()=>{textPrinting = false;}, 1000);
+            setTimeout(()=>{textPrinting = false;}, 500);
         }
     }
     myInterval = setInterval(animateText, 25);

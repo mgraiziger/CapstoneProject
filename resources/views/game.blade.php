@@ -95,6 +95,7 @@
 			var enemyLife;
 			var enemyMax;
 			var playerMax;
+			var playerHealth;
 
 			/*let myFirstPromise = new Promise((resolve, reject) => {
     			setTimeout(function() {
